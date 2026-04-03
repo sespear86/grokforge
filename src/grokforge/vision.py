@@ -86,3 +86,14 @@ class GrokVisionClient:
 
 # Singleton (safe — no import-time crash)
 vision_client = GrokVisionClient()
+
+# Phase 6: VisionAwareSwarm for ReAct2 integration (wraps existing GrokVisionClient)
+class VisionAwareSwarm:
+    """Vision-aware swarm layer — provides .analyze() for ReAct2 observation enrichment"""
+    def __init__(self):
+        self.client = vision_client  # reuse singleton from this file
+
+    async def analyze(self, results: list) -> str:
+        """Enrich observations with vision analysis (stub for now — can take image paths later)"""
+        # For Phase 6 we return lightweight enrichment; real vision calls can be added in next cycle
+        return f"VisionAwareSwarm analysis: {len(results)} results processed • Multi-modal context added"

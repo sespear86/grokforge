@@ -1,7 +1,7 @@
 # Phase 6 integration — Multi-Agent Swarm + ReAct 2.0 + VisionAwareSwarm
 from grokforge.core.react_v2 import ReAct2
 from grokforge.swarm import AgentSwarm
-from grokforge.vision import VisionAwareSwarm  # Phase 5 component
+from grokforge.vision import VisionAwareSwarm  # now present
 
 class GrokDreamV3:
     def __init__(self):
