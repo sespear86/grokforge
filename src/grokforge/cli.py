@@ -1,5 +1,5 @@
 """
-grokforge/cli.py — Full CLI with Phase 2 + Phase 3 Vision + Phase 4 Advanced Memory + Vision Linking
+grokforge/cli.py — Full CLI with Phase 2–5 (Vision + Advanced Memory + Autonomous GrokDream)
 """
 
 from __future__ import annotations
@@ -9,9 +9,9 @@ import os
 import sys
 import time
 from grokforge.memory import GrokMemory
-from grokforge.dream import start_dream_daemon
+from grokforge.dream import start_dream_daemon, get_dream_status
 from grokforge.vision import vision_client
-from grokforge.swarm import VisionAwareSwarm  # Vision-aware swarm
+from grokforge.swarm import VisionAwareSwarm
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="GrokForge — xAI-native agentic harness")
@@ -22,10 +22,11 @@ def main() -> int:
     subparsers.add_parser("init", help="Initialize GrokForge project")
     subparsers.add_parser("run", help="Run ReAct loop")
 
-    # Phase 4 Dream
+    # Phase 4–5 Dream
     dream_parser = subparsers.add_parser("dream", help="GrokDream commands")
     dream_sub = dream_parser.add_subparsers(dest="dream_cmd", required=False)
     dream_sub.add_parser("consolidate", help="Force immediate consolidation")
+    dream_sub.add_parser("status", help="Show GrokDream status")
 
     # Phase 4 Memory
     mem_parser = subparsers.add_parser("memory", help="Advanced semantic memory")
@@ -33,17 +34,15 @@ def main() -> int:
     search_p = mem_sub.add_parser("search", help="Semantic search")
     search_p.add_argument("query", help="Search query")
 
-    # Phase 3 Vision (now with auto memory linking)
+    # Phase 3 Vision
     vision_parser = subparsers.add_parser("vision", help="Grok Imagine vision tools")
     vsub = vision_parser.add_subparsers(dest="vision_cmd", required=True)
-
     gen = vsub.add_parser("generate", help="Generate image with Grok Imagine")
-    gen.add_argument("prompt", help="Text prompt for image generation")
-    gen.add_argument("--output", default="vision-test/grok_imagine_output.png", help="Output file path")
-
-    ana = vsub.add_parser("analyze", help="Analyze an image with Grok Vision")
-    ana.add_argument("image_path", help="Path to image file")
-    ana.add_argument("--prompt", default="Describe this image in extreme detail for the swarm.")
+    gen.add_argument("prompt", help="Text prompt")
+    gen.add_argument("--output", default="vision-test/grok_imagine_output.png")
+    ana = vsub.add_parser("analyze", help="Analyze image with Grok Vision")
+    ana.add_argument("image_path", help="Path to image")
+    ana.add_argument("--prompt", default="Describe this image in extreme detail.")
 
     args = parser.parse_args()
 
@@ -53,7 +52,6 @@ def main() -> int:
     os.makedirs("memory/topics", exist_ok=True)
     memory = GrokMemory()
 
-    # === Phase 4 handlers ===
     if args.cmd == "memory":
         if args.mem_cmd == "search":
             results = memory.semantic_search(args.query)
@@ -64,6 +62,8 @@ def main() -> int:
         if hasattr(args, "dream_cmd") and args.dream_cmd == "consolidate":
             memory.save_topic("manual_consolidate", "User-forced consolidation")
             print("✅ Manual consolidation triggered")
+        elif hasattr(args, "dream_cmd") and args.dream_cmd == "status":
+            get_dream_status()
         else:
             start_dream_daemon()
             print("✅ GrokDream daemon started (Ctrl+C to stop)")
@@ -75,21 +75,18 @@ def main() -> int:
                 print("\n👋 GrokDream shutting down gracefully...")
         return 0
 
-    # === Phase 3 Vision + AUTO MEMORY LINKING ===
     if args.cmd == "vision":
         if args.vision_cmd == "generate":
             result = vision_client.generate(args.prompt, args.output)
             print(result)
-            memory.save_topic("grok_imagine_generation", f"Generated image: {args.prompt}", None)
+            memory.save_topic("grok_imagine_generation", f"Generated image: {args.prompt}")
         elif args.vision_cmd == "analyze":
             analysis = vision_client.analyze(args.image_path, args.prompt)
             print(analysis)
-            # AUTO LINK: save full vision result as enriched topic
             memory.save_topic("vision_analysis", f"Analyzed image: {args.image_path}", analysis)
         return 0
 
-    # Phase 2 fallback
-    print(f"✅ Running Phase 2 command: {args.cmd} (Vision + Memory integration active)")
+    print(f"✅ Running Phase 2 command: {args.cmd} (full Phase 5 integration active)")
     return 0
 
 if __name__ == "__main__":
