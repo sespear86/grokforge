@@ -23,18 +23,9 @@
 
 Paste new terminal output / test results here at the end of every session.
 
-### Phase 3 — Vision (Grok Imagine) — LOCKED ✅
-- ✅ grokforge/vision.py — GrokVisionClient (generate + analyze)
-- ✅ grokforge/cli.py — `grokforge vision generate` / `analyze` subcommands
-- ✅ grokforge/swarm.py — Vision-aware sub-agents (Researcher/Coder/Tester)
-- ✅ Pure vision test run completed
-- ✅ ReAct loop + swarm + xAI tools now fully multi-modal
-- Date: $(date)
-
-### Phase 3 — Vision (Grok Imagine) — LOCKED ✅ (src/ layout fixed)
-- ✅ src/grokforge/vision.py — GrokVisionClient (real /images/generations + chat/completions)
-- ✅ src/grokforge/cli.py — vision subcommands + preserved Phase 2 commands
-- ✅ src/grokforge/swarm.py — VisionAwareSwarm
-- ✅ Pure vision test run completed (image generated + analyzed)
+### Phase 3 — Vision (Grok Imagine) — LOCKED ✅ (official xAI /responses + native payload)
+- ✅ Image generation: /images/generations + grok-imagine-image (working)
+- ✅ Vision analysis: /responses + grok-4.20-reasoning + exact input_image/input_text payload from official docs
+- ✅ Pure vision test run completed (image generated + analyzed successfully)
 - ✅ ReAct loop + swarm now fully multi-modal
 - Date: $(date)
