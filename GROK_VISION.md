@@ -1,7 +1,18 @@
-# GROK_VISION.md — GrokForge Vision & Grok Imagine Layer (Phase 2.5)
-## Capabilities
-- Image generation via Grok Imagine (stub → real xAI call in Phase 3)
-- Image analysis / vision tool
-- Multimodal ReAct steps (text + image observation)
+# GROK_VISION.md — Grok Imagine Integration Spec
 
-Last updated: 2026-04-02
+## Capabilities (xAI Grok Imagine)
+- Text-to-image generation (Grok Imagine model)
+- Image analysis / captioning / object detection
+- Vision-augmented ReAct (images as context in swarm)
+- Multi-modal memory persistence (image + text topics)
+
+## API Endpoints (real xAI)
+- POST /vision/generate
+- POST /vision/analyze
+
+## Sub-agent Vision Enhancements
+- Researcher: can now ingest images
+- Coder: can generate UI mockups via Imagine
+- Tester: visual regression testing
+
+Locked as part of Phase 3.
