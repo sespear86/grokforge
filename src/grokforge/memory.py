@@ -20,10 +20,9 @@ class GrokMemory:
 
     def _save_embeddings(self):
         with open(self.embeddings_file, "w") as f:
-            json.dump(self.embeddings, f)
+            json.dump(self.embeddings, f, indent=2)
 
     def _simple_embedding(self, text: str) -> List[float]:
-        # Placeholder for Grok API embeddings later; deterministic hash-based for now + numpy
         words = text.lower().split()
         vec = np.zeros(64)
         for i, w in enumerate(words[:64]):
@@ -37,18 +36,23 @@ class GrokMemory:
         print(f"Memory trace: {entry[:80]}...")
 
     def save_topic(self, topic: str, content: str, vision_analysis: Optional[str] = None):
-        path = f"{self.topics_dir}/{topic.replace(' ', '_')}.md"
-        with open(path, "a") as f:
+        filename = f"{topic.replace(' ', '_').lower()}.md"
+        path = os.path.join(self.topics_dir, filename)
+        with open(path, "a", encoding="utf-8") as f:
             f.write(f"\n### {datetime.now().isoformat()}\n{content}\n")
             if vision_analysis:
                 f.write(f"\n**Vision Analysis:**\n{vision_analysis}\n")
-        # Auto-embed
+        # Auto-embed for semantic search
         key = f"{topic}:{datetime.now().isoformat()}"
-        self.embeddings[key] = self._simple_embedding(content + (vision_analysis or ""))
+        full_text = content + (vision_analysis or "")
+        self.embeddings[key] = self._simple_embedding(full_text)
         self._save_embeddings()
-        print(f"Saved enriched topic: {topic}")
+        print(f"✅ Saved enriched topic: {topic} | Vision-linked: {'Yes' if vision_analysis else 'No'}")
 
-    def semantic_search(self, query: str, top_k: int = 3) -> List[str]:
+    def list_topics(self) -> List[str]:
+        return [f for f in os.listdir(self.topics_dir) if f.endswith(".md")]
+
+    def semantic_search(self, query: str, top_k: int = 5) -> List[str]:
         if not self.embeddings:
             return ["No memories yet."]
         q_vec = np.array(self._simple_embedding(query))
