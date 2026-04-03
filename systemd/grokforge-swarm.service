@@ -1,18 +1,17 @@
-# systemd/grokforge-swarm.service — Phase 7.2 Production Hardening (Fedora 43)
+# systemd/grokforge-swarm.service — Phase 7.3 FIXED for user services (Fedora 43)
 [Unit]
 Description=GrokForge Swarm ReAct + Multi-Agent Service (Phase 7)
 After=network.target
 
 [Service]
 Type=simple
-User=%i
-WorkingDirectory=/home/%i/AI_Projects/GrokForge/grokforge
+WorkingDirectory=%h/AI_Projects/GrokForge/grokforge
 ExecStart=/usr/bin/python -m src.main_swarm
 Restart=always
 RestartSec=5
 Environment=PYTHONUNBUFFERED=1
 
-# Hardening (Fedora 43 best practices)
+# Hardening (user-service compatible)
 ProtectSystem=strict
 ProtectHome=read-only
 PrivateTmp=yes
@@ -27,4 +26,4 @@ RestrictRealtime=yes
 LockPersonality=yes
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=default.target
