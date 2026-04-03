@@ -1,0 +1,22 @@
+# systemd/grok-dream.service — Phase 7.2 GrokDreamV3 Daemon
+[Unit]
+Description=GrokDreamV3 Vision-Aware Self-Improvement Daemon
+After=grokforge-swarm.service
+
+[Service]
+Type=simple
+User=%i
+WorkingDirectory=/home/%i/AI_Projects/GrokForge/grokforge
+ExecStart=/usr/bin/python -m src.grok_dream_daemon
+Restart=always
+RestartSec=10
+Environment=PYTHONUNBUFFERED=1
+
+# Hardening
+ProtectSystem=strict
+PrivateTmp=yes
+NoNewPrivileges=yes
+MemoryMax=2G
+
+[Install]
+WantedBy=multi-user.target
