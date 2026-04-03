@@ -26,3 +26,5 @@ memory/topics/*.md
 vision-test/
 *.png
 legacy_types/__pycache__/
+
+test-project/
