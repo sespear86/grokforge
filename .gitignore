@@ -1,7 +1,13 @@
 __pycache__/
-archive/
-.omx/
-.clawd-agents/
-# Claude Code local artifacts
-.claude/settings.local.json
-.claude/sessions/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+*.egg-info/
+dist/
+build/
+memory/__pycache__/
+test-project/
