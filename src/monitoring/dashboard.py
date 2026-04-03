@@ -4,7 +4,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 import asyncio
 import json
-from auto_healing_monitor import AutoHealingMonitor   # will wire live
+from src.monitoring.auto_healing_monitor import AutoHealingMonitor
 
 app = FastAPI(title="GrokForge Monitoring Dashboard")
 templates = Jinja2Templates(directory="src/monitoring/templates")
@@ -14,7 +14,12 @@ healer = AutoHealingMonitor()
 @app.get("/", response_class=HTMLResponse)
 async def dashboard(request: Request):
     status = await healer.get_live_status()
-    return templates.TemplateResponse("dashboard.html", {"request": request, "status": status})
+    status_json = json.dumps(status, indent=2)   # pre-rendered for safe template use
+    return templates.TemplateResponse("dashboard.html", {
+        "request": request,
+        "status": status,
+        "status_json": status_json
+    })
 
 @app.get("/api/heal/{service}")
 async def trigger_heal(service: str):
