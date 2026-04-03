@@ -28,3 +28,4 @@ vision-test/
 legacy_types/__pycache__/
 
 test-project/
+uv.lock
