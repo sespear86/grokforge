@@ -1,0 +1,15 @@
+[Unit]
+Description=GrokDream v3 — Autonomous Swarm + Memory Daemon for GrokForge
+After=network.target
+
+[Service]
+Type=simple
+User=Irikash
+WorkingDirectory=/home/Irikash/AI_Projects/GrokForge/grokforge
+ExecStart=/usr/bin/python -m src.grokforge.cli dream
+Restart=always
+RestartSec=5
+Environment=XAI_API_KEY=your_key_here_if_needed
+
+[Install]
+WantedBy=multi-user.target
