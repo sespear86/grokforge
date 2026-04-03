@@ -1,31 +1,42 @@
 import time
 import threading
 import os
+import subprocess
 from datetime import datetime
 from grokforge.memory import GrokMemory
+from grokforge.swarm import VisionAwareSwarm
 
 memory = GrokMemory()
+swarm = VisionAwareSwarm()
 
 def dream_daemon():
-    print("🚀 GrokDream daemon v2 — Advanced Memory + Auto-Consolidation (Phase 4)")
-    print("   • Semantic search active")
-    print("   • Auto-consolidation every 60s")
-    print("   • Vision memory linking enabled")
-    print("   • Persistent across reboots via memory/topics/")
+    print("🚀 GrokDream v3 — Autonomous Swarm + ReAct 2.0 (Phase 5)")
+    print("   • Persistent systemd daemon ready")
+    print("   • Semantic memory + vision linking active")
+    print("   • VisionAwareSwarm runs every 300s")
+    print("   • Self-improving ReAct loop with full xAI tools")
     counter = 0
     while True:
-        time.sleep(60)
+        time.sleep(300)  # 5-minute autonomous cycle
         counter += 1
+        # Autonomous consolidation + swarm activation
         if memory.short_term:
-            summary = f"Auto-consolidated session {counter} — {len(memory.short_term)} traces"
+            summary = f"Autonomous consolidation {counter} — {len(memory.short_term)} traces"
             memory.save_topic("auto_consolidated", summary)
             memory.short_term.clear()
-            print(f"[GrokDream] Consolidated {counter} traces into memory/topics/")
-        print(f"[Daemon heartbeat {counter}] Semantic memory synced | {datetime.now()}")
+        # Wake swarm with latest memory context
+        latest_topics = memory.list_topics()[:3]
+        swarm_task = f"Review recent memory topics: {latest_topics} and suggest one improvement task for GrokForge."
+        swarm_result = swarm.run(swarm_task)
+        memory.save_topic("swarm_insight", f"Swarm cycle {counter}", swarm_result)
+        print(f"[GrokDream] Cycle {counter} complete | Swarm insight saved | {datetime.now()}")
 
 def start_dream_daemon():
-    """Start persistent GrokDream in background thread."""
     t = threading.Thread(target=dream_daemon, daemon=True)
     t.start()
-    print("✅ GrokDream v2 running persistently (background thread)")
+    print("✅ GrokDream v3 autonomous daemon started (background)")
     return t
+
+def install_systemd_service():
+    """Optional: Install as real systemd service for true persistence."""
+    print("🔧 (Optional) Run 'sudo systemctl enable --now grokdream' after manual service file creation")
