@@ -16,7 +16,6 @@ def dream_daemon():
     while True:
         time.sleep(60)
         counter += 1
-        # Auto-consolidation logic
         if memory.short_term:
             summary = f"Auto-consolidated session {counter} — {len(memory.short_term)} traces"
             memory.save_topic("auto_consolidated", summary)
