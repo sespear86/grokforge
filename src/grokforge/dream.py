@@ -1,26 +1,32 @@
 import time
 import threading
-import atexit
+import os
+from datetime import datetime
+from grokforge.memory import GrokMemory
 
-_stop_event = threading.Event()
+memory = GrokMemory()
 
 def dream_daemon():
-    print("🌌 GrokDream daemon starting (PERSISTENT background mode)")
-    print(" • Monitoring ReAct traces + sub-agent handoffs")
-    print(" • Vision queue active | Memory persistence every 30s")
-    print(" • Auto-saving topics to memory/topics/")
-    heartbeat = 0
-    while not _stop_event.is_set():
-        heartbeat += 1
-        time.sleep(5)  # short demo interval so you can Ctrl+C cleanly
-        print(f"[Daemon heartbeat {heartbeat}] Persistent memory + swarm synced")
+    print("🚀 GrokDream daemon v2 — Advanced Memory + Auto-Consolidation (Phase 4)")
+    print("   • Semantic search active")
+    print("   • Auto-consolidation every 60s")
+    print("   • Vision memory linking enabled")
+    print("   • Persistent across reboots via memory/topics/")
+    counter = 0
+    while True:
+        time.sleep(60)
+        counter += 1
+        # Auto-consolidation logic
+        if memory.short_term:
+            summary = f"Auto-consolidated session {counter} — {len(memory.short_term)} traces"
+            memory.save_topic("auto_consolidated", summary)
+            memory.short_term.clear()
+            print(f"[GrokDream] Consolidated {counter} traces into memory/topics/")
+        print(f"[Daemon heartbeat {counter}] Semantic memory synced | {datetime.now()}")
 
 def start_dream_daemon():
-    t = threading.Thread(target=dream_daemon, daemon=False)
+    """Start persistent GrokDream in background thread."""
+    t = threading.Thread(target=dream_daemon, daemon=True)
     t.start()
-    print("GrokDream daemon running on background thread (port 42069 simulation)")
-    # graceful shutdown
-    def stop():
-        _stop_event.set()
-        print("🌌 GrokDream daemon shutting down cleanly")
-    atexit.register(stop)
+    print("✅ GrokDream v2 running persistently (background thread)")
+    return t

@@ -5,6 +5,9 @@ grokforge/cli.py — Full CLI with Phase 2 (init/run/dream) + Phase 3 Vision
 from __future__ import annotations
 
 import argparse
+from grokforge.memory import GrokMemory
+from grokforge.dream import start_dream_daemon
+
 import os
 import sys
 from grokforge.vision import vision_client
