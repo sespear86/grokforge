@@ -1,43 +1,31 @@
 import typer
-import sys
 from rich.console import Console
+from react.loop import run_autonomous_react_loop
+from ui.rich_helpers import show_completion_message
 
 console = Console()
+app = typer.Typer(help="GrokForge — Autonomous Feature Shipping with ReAct 2.0")
 
-# === DEBUG SECTION ===
-print("=== GROKFORGE DEBUG ===", file=sys.stderr)
-print("DEBUG: main.py loaded as module", file=sys.stderr)
-print(f"DEBUG: src in path? {any('src' in p for p in sys.path)}", file=sys.stderr)
-# === END DEBUG ===
-
-typer_app = typer.Typer(
-    name="grokforge",
-    help="GrokForge — Grok-native agentic coding harness (xAI first)",
-    no_args_is_help=True,
-)
-
-@typer_app.command("ship")
+@app.command()
 def ship_feature(
     feature_description: str = typer.Argument(..., help="The feature to autonomously ship"),
-    dry_run: bool = typer.Option(True, "--dry-run/--no-dry-run", help="Simulate only (recommended)")
+    dry_run: bool = typer.Option(True, "--dry-run/--no-dry-run", help="Simulate only (recommended for safety)")
 ):
     """Autonomously ship a feature using ReAct 2.0."""
-    console.print(f"[bold]Mode:[/bold] {'🧪 DRY-RUN (safe)' if dry_run else '🚀 LIVE'}")
-    from react.loop import run_autonomous_react_loop
-    success = run_autonomous_react_loop(feature_description, dry_run=dry_run)
-    if success:
-        console.print("[bold magenta]🚀 GrokForge autonomous cycle complete![/bold magenta]")
-    else:
-        console.print("[bold red]Ship cycle ended with issues[/bold red]")
+    console.print("[bold green]=== GROKFORGE DEBUG ===[/bold green]")
+    console.print("DEBUG: main.py loaded successfully")
+    console.print("DEBUG: ship_feature registered as root command")
+   
+    mode = "🧪 DRY-RUN (safe)" if dry_run else "🚀 LIVE"
+    console.print(f"Mode: {mode}")
+    run_autonomous_react_loop(feature_description, dry_run)
+    if not dry_run:
+        show_completion_message(feature_description)
 
-# === DEBUG SECTION (safe) ===
-print("DEBUG: ship command successfully registered via decorator", file=sys.stderr)
-print("DEBUG: cli() entrypoint defined", file=sys.stderr)
-# === END DEBUG ===
-
+# CLI entrypoint for console_scripts
 def cli():
-    """Main CLI entry point."""
-    typer_app()
+    """Entry point called by the installed grokforge command."""
+    app()
 
 if __name__ == "__main__":
     cli()
