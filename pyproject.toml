@@ -3,11 +3,15 @@ name = "grokforge"
 version = "0.2.0"
 description = "GrokForge — Grok-native agentic coding harness (xAI first)"
 requires-python = ">=3.10"
-dependencies = []
-
+dependencies = [
+    "rich>=13.7.0",
+    "typer>=0.12.0",
+]
 [project.scripts]
-grokforge = "grokforge.cli:main"
+grokforge = "main:cli"
 
+[tool.setuptools.packages.find]
+where = ["src"]
 [build-system]
 requires = ["setuptools>=45"]
 build-backend = "setuptools.build_meta"
