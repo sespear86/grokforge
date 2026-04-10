@@ -9,7 +9,6 @@ console = Console()
 app = typer.Typer(help="GrokForge — Autonomous Feature Shipping with ReAct 2.0")
 
 def get_next_backlog_task():
-    """Dynamically read GROK_BACKLOG.md line-by-line and return the first unchecked task (bulletproof)."""
     backlog_path = Path("GROK_BACKLOG.md")
     if not backlog_path.exists():
         return "[GROKDREAM] No backlog found — using placeholder"
@@ -22,7 +21,6 @@ def get_next_backlog_task():
     return "[GROKDREAM] All tasks complete — engine idle"
 
 def normalize_backlog():
-    """Permanently fix any [x] [x] malformations or artifacts (full foresight)."""
     backlog_path = Path("GROK_BACKLOG.md")
     if not backlog_path.exists():
         return
@@ -36,7 +34,6 @@ def normalize_backlog():
     backlog_path.write_text("\n".join(updated) + "\n", encoding="utf-8")
 
 def mark_task_complete(task_description: str):
-    """Mark task complete line-by-line + commit — never creates malformed entries."""
     backlog_path = Path("GROK_BACKLOG.md")
     if not backlog_path.exists():
         return
@@ -56,12 +53,11 @@ def mark_task_complete(task_description: str):
         console.print("[yellow]⚠ Git commit note (pre-commit) — task still marked locally[/yellow]")
 
 def cleanup_polluted_files():
-    """Automatically clean any ReAct pollution from previous cycles (full foresight)."""
     polluted = ["src/ui/dark_mode_toggle.py"]
     for f in polluted:
         path = Path(f)
         if path.exists():
-            path.write_text("# Cleaned by GrokDream v24 — ready for new features\n", encoding="utf-8")
+            path.write_text("# Cleaned by GrokDream v26 — ready for new features\n", encoding="utf-8")
             console.print(f"[bold green]🧹 Cleaned polluted file: {f}[/bold green]")
     subprocess.run(["git", "add"] + polluted, check=False, capture_output=True)
 
@@ -82,7 +78,6 @@ def ship_feature(
 def dream(
     dry_run: bool = typer.Option(False, "--dry-run/--no-dry-run", help="Simulate only (recommended for safety)")
 ):
-    """Launch GrokDream autonomous mode — normalizes, cleans, picks, ships, marks."""
     console.print("[bold green]=== GROKFORGE DEBUG ===[/bold green]")
     console.print("DEBUG: main.py loaded successfully")
     console.print("DEBUG: dream subcommand registered as top-level command")
