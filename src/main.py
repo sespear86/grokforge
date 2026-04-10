@@ -15,12 +15,27 @@ def ship_feature(
     console.print("[bold green]=== GROKFORGE DEBUG ===[/bold green]")
     console.print("DEBUG: main.py loaded successfully")
     console.print("DEBUG: ship_feature registered as root command")
-   
-    mode = "🧪 DRY-RUN (safe)" if dry_run else "🚀 LIVE"
+    mode = "DRY-RUN (safe)" if dry_run else "LIVE MODE 🔥"
     console.print(f"Mode: {mode}")
     run_autonomous_react_loop(feature_description, dry_run)
     if not dry_run:
         show_completion_message(feature_description)
+
+@app.command()
+def dream(
+    dry_run: bool = typer.Option(False, "--dry-run/--no-dry-run", help="Simulate only (recommended for safety)")
+):
+    """Launch GrokDream autonomous mode — no feature_description required."""
+    console.print("[bold green]=== GROKFORGE DEBUG ===[/bold green]")
+    console.print("DEBUG: main.py loaded successfully")
+    console.print("DEBUG: dream subcommand registered as top-level command")
+    mode = "DRY-RUN (safe)" if dry_run else "LIVE MODE 🔥"
+    console.print(f"Mode: {mode}")
+    # Highest-priority task from GROK_BACKLOG.md per PHASE 10 goals
+    task = "[GROKDREAM] Highest-priority task from GROK_BACKLOG.md per PHASE 10 goals"
+    run_autonomous_react_loop(task, dry_run)
+    if not dry_run:
+        show_completion_message(task)
 
 # CLI entrypoint for console_scripts
 def cli():

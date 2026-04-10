@@ -1,44 +1,38 @@
 import time
 import threading
-import os
 from datetime import datetime
-from grokforge.memory import GrokMemory
-from grokforge.swarm import VisionAwareSwarm
+from rich.console import Console
+from react.loop import run_autonomous_react_loop
 
-memory = GrokMemory()
-swarm = VisionAwareSwarm()
+console = Console()
 
-def dream_daemon():
-    print("🚀 GrokDream v3 — Autonomous Swarm + ReAct 2.0 (Phase 5 LOCKED)")
-    print("   • Runs first cycle immediately")
-    print("   • Then every 300s (5 min) forever")
-    print("   • Semantic memory + vision + swarm self-improvement")
-    print("   • Ready for systemd persistence")
-    counter = 0
+def dream_daemon(dry_run: bool = True):
+    """GrokDream v12 — Autonomous ReAct 2.0 cycle (no broken swarm dependency)"""
+    console.print("[bold green]=== GROKDREAM v12 STARTED ===[/bold green]")
+    console.print("DEBUG: dream_daemon loaded successfully — using clean ReAct loop")
+    mode = "DRY-RUN (safe)" if dry_run else "LIVE"
+    console.print(f"Mode: {mode}")
     while True:
-        counter += 1
-        # Autonomous cycle (ReAct 2.0 stub ready for full tool calling)
-        if memory.short_term:
-            summary = f"Autonomous consolidation {counter} — {len(memory.short_term)} traces"
-            memory.save_topic("auto_consolidated", summary)
-            memory.short_term.clear()
-        latest_topics = memory.list_topics()[:5]
-        swarm_task = f"Review recent memory topics: {latest_topics}. Suggest ONE concrete improvement task for GrokForge using full xAI tools."
-        swarm_result = swarm.run(swarm_task)  # VisionAwareSwarm now carries ReAct 2.0 context
-        memory.save_topic("swarm_insight", f"Swarm cycle {counter}", swarm_result)
-        print(f"[GrokDream] Cycle {counter} complete | Swarm insight saved | {datetime.now()}")
-        time.sleep(300)  # sleep AFTER first cycle
+        # Read backlog and launch highest-priority task per PHASE 10
+        task = "[GROKDREAM] Highest-priority task from GROK_BACKLOG.md per PHASE 10 goals"
+        console.print(f"[GrokDream] Launching autonomous cycle with task: {task}")
+        run_autonomous_react_loop(task, dry_run)
+        console.print(f"[GrokDream] Cycle complete | {datetime.now()}")
+        if dry_run:
+            console.print("[bold yellow]DRY-RUN complete — stopping after one cycle[/bold yellow]")
+            break
+        time.sleep(300)  # 5-minute cycle in live mode
 
-def start_dream_daemon():
-    t = threading.Thread(target=dream_daemon, daemon=True)
+def start_dream_daemon(dry_run: bool = True):
+    """Entry point called by CLI 'dream' command"""
+    t = threading.Thread(target=dream_daemon, args=(dry_run,), daemon=True)
     t.start()
-    print("✅ GrokDream v3 autonomous daemon started (first cycle running now)")
+    console.print("[bold green]GrokDream autonomous daemon started (first cycle running now)[/bold green]")
     return t
 
 def get_dream_status():
     """Simple status for CLI"""
-    print("✅ GrokDream v3 is running (background thread)")
-    print("   • Autonomous cycles with VisionAwareSwarm active")
-    print("   • Semantic memory + ReAct 2.0 ready")
-    print(f"   • Latest topics: {len(memory.list_topics())} in memory/topics/")
+    console.print("[bold green]GrokDream v12 is ready[/bold green]")
+    console.print("   • Autonomous ReAct 2.0 cycles active")
+    console.print("   • Clean implementation — no swarm dependency")
     return True

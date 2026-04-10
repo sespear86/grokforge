@@ -1,93 +1,45 @@
-"""
-grokforge/cli.py — Full CLI with Phase 2–5 (Vision + Advanced Memory + Autonomous GrokDream)
-"""
-
-from __future__ import annotations
-
 import argparse
-import os
-import sys
-import time
-from grokforge.memory import GrokMemory
+from rich.console import Console
 from grokforge.dream import start_dream_daemon, get_dream_status
-from grokforge.vision import vision_client
-from grokforge.swarm import VisionAwareSwarm
+from react.loop import run_autonomous_react_loop
 
-def main() -> int:
-    parser = argparse.ArgumentParser(description="GrokForge — xAI-native agentic harness")
-    parser.add_argument("--api-key", default=os.getenv("XAI_API_KEY"), help="xAI API key")
-    subparsers = parser.add_subparsers(dest="cmd", required=True)
+console = Console()
 
-    # Phase 2
-    subparsers.add_parser("init", help="Initialize GrokForge project")
-    subparsers.add_parser("run", help="Run ReAct loop")
+def main():
+    """Main CLI entrypoint (called by __main__.py)"""
+    parser = argparse.ArgumentParser(
+        description="GrokForge — Autonomous Feature Shipping with ReAct 2.0",
+        prog="grokforge"
+    )
+    subparsers = parser.add_subparsers(dest="command", required=True)
 
-    # Phase 4–5 Dream
-    dream_parser = subparsers.add_parser("dream", help="GrokDream commands")
-    dream_sub = dream_parser.add_subparsers(dest="dream_cmd", required=False)
-    dream_sub.add_parser("consolidate", help="Force immediate consolidation")
-    dream_sub.add_parser("status", help="Show GrokDream status")
+    # ship_feature command
+    ship_parser = subparsers.add_parser("ship_feature", help="Autonomously ship a feature using ReAct 2.0")
+    ship_parser.add_argument("feature_description", help="The feature to autonomously ship")
+    ship_parser.add_argument("--dry-run", action="store_true", default=True, help="Simulate only (recommended for safety)")
 
-    # Phase 4 Memory
-    mem_parser = subparsers.add_parser("memory", help="Advanced semantic memory")
-    mem_sub = mem_parser.add_subparsers(dest="mem_cmd", required=True)
-    search_p = mem_sub.add_parser("search", help="Semantic search")
-    search_p.add_argument("query", help="Search query")
-
-    # Phase 3 Vision
-    vision_parser = subparsers.add_parser("vision", help="Grok Imagine vision tools")
-    vsub = vision_parser.add_subparsers(dest="vision_cmd", required=True)
-    gen = vsub.add_parser("generate", help="Generate image with Grok Imagine")
-    gen.add_argument("prompt", help="Text prompt")
-    gen.add_argument("--output", default="vision-test/grok_imagine_output.png")
-    ana = vsub.add_parser("analyze", help="Analyze image with Grok Vision")
-    ana.add_argument("image_path", help="Path to image")
-    ana.add_argument("--prompt", default="Describe this image in extreme detail.")
+    # dream command
+    dream_parser = subparsers.add_parser("dream", help="Launch GrokDream autonomous mode")
+    dream_parser.add_argument("--dry-run", action="store_true", default=True, help="Simulate only (recommended for safety)")
 
     args = parser.parse_args()
 
-    if args.api_key:
-        vision_client.api_key = args.api_key
+    console.print("[bold green]=== GROKFORGE DEBUG ===[/bold green]")
+    console.print("DEBUG: cli.py loaded successfully")
 
-    os.makedirs("memory/topics", exist_ok=True)
-    memory = GrokMemory()
+    if args.command == "ship_feature":
+        console.print("DEBUG: ship_feature registered")
+        mode = "DRY-RUN (safe)" if args.dry_run else "LIVE"
+        console.print(f"Mode: {mode}")
+        run_autonomous_react_loop(args.feature_description, args.dry_run)
 
-    if args.cmd == "memory":
-        if args.mem_cmd == "search":
-            results = memory.semantic_search(args.query)
-            print("\n".join(results) or "No memories yet.")
-        return 0
-
-    if args.cmd == "dream":
-        if hasattr(args, "dream_cmd") and args.dream_cmd == "consolidate":
-            memory.save_topic("manual_consolidate", "User-forced consolidation")
-            print("✅ Manual consolidation triggered")
-        elif hasattr(args, "dream_cmd") and args.dream_cmd == "status":
+    elif args.command == "dream":
+        console.print("DEBUG: dream command registered as top-level subcommand")
+        mode = "DRY-RUN (safe)" if args.dry_run else "LIVE"
+        console.print(f"Mode: {mode}")
+        start_dream_daemon(args.dry_run)
+        if args.dry_run:
             get_dream_status()
-        else:
-            start_dream_daemon()
-            print("✅ GrokDream daemon started (Ctrl+C to stop)")
-            print("   (Press Ctrl+C when done testing)")
-            try:
-                while True:
-                    time.sleep(10)
-            except KeyboardInterrupt:
-                print("\n👋 GrokDream shutting down gracefully...")
-        return 0
-
-    if args.cmd == "vision":
-        if args.vision_cmd == "generate":
-            result = vision_client.generate(args.prompt, args.output)
-            print(result)
-            memory.save_topic("grok_imagine_generation", f"Generated image: {args.prompt}")
-        elif args.vision_cmd == "analyze":
-            analysis = vision_client.analyze(args.image_path, args.prompt)
-            print(analysis)
-            memory.save_topic("vision_analysis", f"Analyzed image: {args.image_path}", analysis)
-        return 0
-
-    print(f"✅ Running Phase 2 command: {args.cmd} (full Phase 5 integration active)")
-    return 0
 
 if __name__ == "__main__":
-    sys.exit(main())
+    main()
