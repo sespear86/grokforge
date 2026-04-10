@@ -21,4 +21,4 @@
 - [x] Create systemd service + install script for persistent 24/7 GrokDream operation
 - [x] Build full Rich Streaming UI + live dashboard (src/ui/rich_streaming.py)
 - [x] Add more ReAct tools (web search, code analysis, etc.)
-- [ ] Create GitHub Actions for automated testing + release
+- [x] Create GitHub Actions for automated testing + release
