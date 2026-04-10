@@ -14,12 +14,26 @@ def get_next_backlog_task():
     if not backlog_path.exists():
         return "[GROKDREAM] No backlog found — using placeholder"
     content = backlog_path.read_text(encoding="utf-8").splitlines()
-    for i, line in enumerate(content):
+    for line in content:
         stripped = line.strip()
         if stripped.startswith("- [ ]"):
-            task = stripped[5:].strip()  # remove "- [ ] "
+            task = stripped[5:].strip()
             return task
     return "[GROKDREAM] All tasks complete — engine idle"
+
+def normalize_backlog():
+    """Permanently fix any [x] [x] malformations or artifacts (full foresight)."""
+    backlog_path = Path("GROK_BACKLOG.md")
+    if not backlog_path.exists():
+        return
+    lines = backlog_path.read_text(encoding="utf-8").splitlines()
+    updated = []
+    for line in lines:
+        if "[x] [x]" in line:
+            line = line.replace("[x] [x]", "[x]")
+            console.print("[bold green]✅ Backlog normalized (fixed malformed [x] [x])[/bold green]")
+        updated.append(line)
+    backlog_path.write_text("\n".join(updated) + "\n", encoding="utf-8")
 
 def mark_task_complete(task_description: str):
     """Mark task complete line-by-line + commit — never creates malformed entries."""
@@ -30,12 +44,10 @@ def mark_task_complete(task_description: str):
     updated = []
     for line in lines:
         if line.strip().startswith("- [ ]") and task_description in line:
-            # Replace only the checkbox, keep exact original formatting
             updated.append(line.replace("- [ ]", "- [x]", 1))
         else:
             updated.append(line)
     backlog_path.write_text("\n".join(updated) + "\n", encoding="utf-8")
-    # Robust commit
     try:
         subprocess.run(["git", "add", "GROK_BACKLOG.md"], check=True, capture_output=True)
         subprocess.run(["git", "commit", "-m", f"chore(backlog): mark completed → {task_description[:80]}", "--no-verify"], check=True, capture_output=True)
@@ -49,8 +61,7 @@ def cleanup_polluted_files():
     for f in polluted:
         path = Path(f)
         if path.exists():
-            # Replace with minimal valid stub so future cycles don't get confused
-            path.write_text("# Cleaned by GrokDream v23 — ready for new features\n# This file will be properly implemented when the task requires it.\n", encoding="utf-8")
+            path.write_text("# Cleaned by GrokDream v24 — ready for new features\n", encoding="utf-8")
             console.print(f"[bold green]🧹 Cleaned polluted file: {f}[/bold green]")
     subprocess.run(["git", "add"] + polluted, check=False, capture_output=True)
 
@@ -71,14 +82,15 @@ def ship_feature(
 def dream(
     dry_run: bool = typer.Option(False, "--dry-run/--no-dry-run", help="Simulate only (recommended for safety)")
 ):
-    """Launch GrokDream autonomous mode — dynamically picks, cleans, ships, marks."""
+    """Launch GrokDream autonomous mode — normalizes, cleans, picks, ships, marks."""
     console.print("[bold green]=== GROKFORGE DEBUG ===[/bold green]")
     console.print("DEBUG: main.py loaded successfully")
     console.print("DEBUG: dream subcommand registered as top-level command")
     mode = "DRY-RUN (safe)" if dry_run else "LIVE MODE 🔥"
     console.print(f"Mode: {mode}")
    
-    cleanup_polluted_files()  # Prevent pollution carry-over
+    normalize_backlog()
+    cleanup_polluted_files()
     task = get_next_backlog_task()
     console.print(f"📋 Next task from GROK_BACKLOG.md: [bold]{task}[/bold]")
    
