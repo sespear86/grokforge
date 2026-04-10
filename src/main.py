@@ -4,10 +4,8 @@ from rich.console import Console
 from pathlib import Path
 from react.loop import run_autonomous_react_loop
 from ui.rich_helpers import show_completion_message
-
 console = Console()
 app = typer.Typer(help="GrokForge — Autonomous Feature Shipping with ReAct 2.0")
-
 def get_next_backlog_task():
     backlog_path = Path("GROK_BACKLOG.md")
     if not backlog_path.exists():
@@ -19,7 +17,6 @@ def get_next_backlog_task():
             task = stripped[5:].strip()
             return task
     return "[GROKDREAM] All tasks complete — engine idle"
-
 def normalize_backlog():
     backlog_path = Path("GROK_BACKLOG.md")
     if not backlog_path.exists():
@@ -32,7 +29,6 @@ def normalize_backlog():
             console.print("[bold green]✅ Backlog normalized (fixed malformed [x] [x])[/bold green]")
         updated.append(line)
     backlog_path.write_text("\n".join(updated) + "\n", encoding="utf-8")
-
 def mark_task_complete(task_description: str):
     backlog_path = Path("GROK_BACKLOG.md")
     if not backlog_path.exists():
@@ -51,16 +47,14 @@ def mark_task_complete(task_description: str):
         console.print("[bold green]✅ Backlog task marked complete and committed[/bold green]")
     except subprocess.CalledProcessError:
         console.print("[yellow]⚠ Git commit note (pre-commit) — task still marked locally[/yellow]")
-
 def cleanup_polluted_files():
     polluted = ["src/ui/dark_mode_toggle.py"]
     for f in polluted:
         path = Path(f)
         if path.exists():
-            path.write_text("# Cleaned by GrokDream v26 — ready for new features\n", encoding="utf-8")
+            path.write_text("# Cleaned by GrokDream v27 — ready for new features\n", encoding="utf-8")
             console.print(f"[bold green]🧹 Cleaned polluted file: {f}[/bold green]")
     subprocess.run(["git", "add"] + polluted, check=False, capture_output=True)
-
 @app.command()
 def ship_feature(
     feature_description: str = typer.Argument(..., help="The feature to autonomously ship"),
@@ -73,7 +67,6 @@ def ship_feature(
     run_autonomous_react_loop(feature_description, dry_run)
     if not dry_run:
         show_completion_message(feature_description)
-
 @app.command()
 def dream(
     dry_run: bool = typer.Option(False, "--dry-run/--no-dry-run", help="Simulate only (recommended for safety)")
@@ -83,19 +76,15 @@ def dream(
     console.print("DEBUG: dream subcommand registered as top-level command")
     mode = "DRY-RUN (safe)" if dry_run else "LIVE MODE 🔥"
     console.print(f"Mode: {mode}")
-   
     normalize_backlog()
     cleanup_polluted_files()
     task = get_next_backlog_task()
     console.print(f"📋 Next task from GROK_BACKLOG.md: [bold]{task}[/bold]")
-   
     run_autonomous_react_loop(task, dry_run)
     if not dry_run:
         mark_task_complete(task)
         show_completion_message(task)
-
 def cli():
     app()
-
 if __name__ == "__main__":
     cli()
