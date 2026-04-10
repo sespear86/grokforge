@@ -14,7 +14,7 @@ dependencies = [
 ]
 
 [project.scripts]
-grokforge = "src.main:cli"
+grokforge = "main:cli"
 
 [tool.setuptools.packages.find]
 where = ["src"]

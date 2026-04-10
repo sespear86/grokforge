@@ -1,0 +1,13 @@
+# Dynamically generated systemd service by GrokDream v31
+[Unit]
+Description=GrokForge Autonomous Dream Service
+After=network.target
+[Service]
+Type=simple
+User=Irikash
+WorkingDirectory=/home/Irikash/AI_Projects/GrokForge/grokforge
+ExecStart=/usr/local/bin/grokforge dream
+Restart=always
+RestartSec=10
+[Install]
+WantedBy=multi-user.target
