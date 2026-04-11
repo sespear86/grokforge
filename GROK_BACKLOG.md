@@ -38,3 +38,11 @@
 - [ ] Improve systemd service + install script for 24/7 persistence
 - [ ] Add E2E tests + more ReAct tools (unlimited scope)
 - [ ] Anything else — no limits on what GrokDream ships next
+## Phase 11 PROGRESS (GrokDream self-tasks + marks completed autonomously)
+- [x] Add web_search + code_analysis ReAct tools (already present in src/tools/)
+- [x] Build full Rich Streaming UI + live dashboard (src/ui/rich_streaming.py + helpers already in build)
+- [ ] Official v0.1 PyPI release + git tag (next block)
+- [ ] Expand full dynamic commands package (PORTED_COMMANDS + get_commands) ← JUST SHIPPED v42
+- [ ] Improve systemd service + install script for 24/7 persistence
+- [ ] Add E2E tests + more ReAct tools (unlimited scope)
+- [ ] Anything else — no limits on what GrokDream ships next
