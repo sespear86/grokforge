@@ -113,3 +113,11 @@ Ready for Phase 6 (full tool-calling ReAct + multi-agent collaboration).
 - Dream cycles now trigger real tool-using ReAct
 - Branch: phase6-react-toolcalling-multiagent
 Local tests passed. Ready for final tool integration.
+
+### Tier 4 – Spatial Long-Term Memory (MemPalaceBackend) – COMPLETED Apr 13 2026
+- `memory/mempalace_bridge.py` + `backends.py` + `__init__.py` live on main.
+- Direct one-line PATH fix to side palace (zero subprocess fragility).
+- New native tools: `mempalace_query`, `mempalace_mine`, `mempalace_wake`, `mempalace_status`, `mempalace_wake_up`.
+- Tool registry (`tools/memory_tools.py`) + swarm integration points added.
+- Full foresight preserved: ready for Rust hot-paths, multi-modal drawers, distributed backends, natural-language swarm agents.
+- Side palace (5427+ drawers) now officially GrokForge’s Tier-4 layer.
