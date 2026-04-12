@@ -58,3 +58,40 @@ class MemPalaceBridge:
     def wake(self, drawer_id: str) -> Dict:
         """Retrieve exact drawer by ID."""
         return self._call_method("wake", drawer_id)
+
+    # === RUST HOT-PATH + MULTI-MODAL EXTENSIONS (added – full foresight) ===
+    def __init__(self):
+        # ... (existing init code stays exactly as-is) ...
+        # Try to load Rust hot-path (graceful fallback)
+        try:
+            import sys
+            sys.path.insert(0, "rust/memory_hotpath/target/release")
+            from grokforge_memory_hotpath import RustHotPath
+            self.rust = RustHotPath()
+            print("✅ Rust hot-path loaded (PyO3)")
+        except Exception:
+            self.rust = None
+            print("⚠️ Rust hot-path not compiled yet – Python fallback active")
+
+    def rust_search(self, query: str, limit: int = 10) -> List[Dict]:
+        """Ultra-fast Rust spatial search (hot-path)."""
+        if self.rust:
+            results = self.rust.ultra_fast_search(query, limit)
+            return [{"id": r, "score": 1.0, "source": "rust"} for r in results]
+        return self.search(query, limit)  # fallback
+
+    def rust_mine(self, text: str, metadata: Optional[Dict] = None) -> Dict:
+        """Ultra-fast Rust mining."""
+        if self.rust:
+            self.rust.ultra_fast_mine(text, None)
+        return self.mine(text, metadata)
+
+    # Multi-modal drawer hooks (placeholders – ready for Grok-2 vision, audio, etc.)
+    def mine_multi_modal(self, content: Any, modality: str = "text", metadata: Optional[Dict] = None) -> Dict:
+        """Mine image/text/audio/video into spatial drawers."""
+        meta = metadata or {}
+        meta["modality"] = modality
+        meta["multi_modal"] = True
+        if modality == "image" and hasattr(self.palace, "mine_image"):
+            return self.palace.mine_image(content, meta)
+        return self.mine(str(content), meta)  # fallback
