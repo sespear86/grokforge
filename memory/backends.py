@@ -37,48 +37,54 @@ class MemoryBackend(ABC):
 
 
 class MemPalaceBackend(MemoryBackend):
-    """Concrete MemPalace v3.1.0 backend using the existing bridge.
-    Supports optional venv activation for perfect isolation.
+    """Concrete MemPalace v3.1.0 backend – directly wraps the excellent MemPalaceBridge class.
+    Supports optional venv activation for perfect isolation (Python 3.12 side palace).
     """
     def __init__(self, venv_path: Optional[str] = None):
         self.venv_path = venv_path or str(Path.home() / "grokforge-palaces/mempalace-venv")
-        self.bridge_module = "memory.mempalace_bridge"
+        # Import the already-perfect bridge class from the same package
+        from .mempalace_bridge import MemPalaceBridge
+        self.bridge = MemPalaceBridge()
 
-    def _run_bridge(self, method: str, **kwargs) -> Dict[str, Any]:
-        """Internal helper that activates venv if needed and calls bridge."""
-        cmd = ["python", "-m", self.bridge_module, method]
-        for k, v in kwargs.items():
-            if v is not None:
-                cmd.extend([f"--{k.replace('_', '-')}", str(v)])
+    def _run_with_venv(self, func_name: str, **kwargs) -> Dict[str, Any]:
+        """Call bridge method with venv activation if needed."""
+        if not Path(self.venv_path).exists():
+            return getattr(self.bridge, func_name)(**kwargs)
 
-        env = os.environ.copy()
-        if Path(self.venv_path).exists():
-            activate = f"source {self.venv_path}/bin/activate && "
-            cmd = ["bash", "-c", activate + " ".join(cmd)]
-
+        # Activate venv for the call (bridge already uses subprocess to mempalace bin)
+        activate_script = f"source {self.venv_path}/bin/activate && python -c "
+        code = f'''
+import sys
+sys.path.insert(0, "/home/Irikash/AI_Projects/GrokForge/grokforge")
+from memory.mempalace_bridge import MemPalaceBridge
+bridge = MemPalaceBridge()
+import json
+result = bridge.{func_name}(**{kwargs})
+print(json.dumps(result))
+'''
         try:
-            result = subprocess.run(cmd, capture_output=True, text=True, check=True)
-            # Bridge already returns dicts; we just pass through
-            import json
-            return json.loads(result.stdout) if result.stdout.strip() else {"success": True, "raw_output": result.stdout}
-        except subprocess.CalledProcessError as e:
-            return {"error": str(e), "stderr": e.stderr, "command": " ".join(cmd)}
+            result = subprocess.run(
+                ["bash", "-c", activate_script + f"'{code}'"],
+                capture_output=True, text=True, check=True
+            )
+            return json.loads(result.stdout.strip())
+        except Exception as e:
+            return {"error": str(e), "command": "venv-activated bridge call"}
 
     def status(self) -> Dict[str, Any]:
-        return self._run_bridge("status")
+        return self._run_with_venv("status")
 
     def wake_up(self, wing: Optional[str] = None) -> str:
-        result = self._run_bridge("wake-up", wing=wing)
+        result = self._run_with_venv("wake_up", wing=wing)
         return result.get("raw_output", str(result))
 
     def search(self, query: str, wing: Optional[str] = None, limit: int = 5) -> List[Dict[str, Any]]:
-        result = self._run_bridge("search", query=query, wing=wing)
-        # Bridge search already returns formatted text; we keep raw for now
+        result = self._run_with_venv("search", query=query, wing=wing)
         return [{"raw": result.get("raw_output", str(result))}]
 
     def mine(self, source: str, mode: str = "convos") -> Dict[str, Any]:
-        return self._run_bridge("mine", source=source, mode=mode)
+        return self._run_with_venv("mine", path=source, mode=mode)
 
     def grokforge_wake_up(self) -> str:
-        result = self._run_bridge("wake-up", wing="sean_grok_chats")
+        result = self._run_with_venv("grokforge_wake_up")
         return result.get("raw_output", str(result))
