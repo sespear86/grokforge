@@ -29,3 +29,11 @@ Last updated: 2026-04-02
 - New tools: `swarm_mine_collective`, `swarm_search`, `swarm_wake_agent`
 - Fully pluggable for Rust hot-paths, multi-modal drawers, distributed backends, natural-language swarm agents
 - Next: Rust memory hot-path + vision-aware swarm drawers
+
+## Tier 4 Swarm Agent Memory Integration (April 12 2026)
+- `SwarmMemory` class wraps `MemPalaceBridge` (MemoryStack)
+- Shared collective memory + per-agent drawers
+- New tools: `swarm_mine_collective`, `swarm_search`, `swarm_wake_agent`
+- Fully pluggable for Rust hot-paths, multi-modal drawers, distributed backends, natural-language swarm agents
+- Import fix added to all tests for zero-friction running
+- Next: Rust memory hot-path + vision-aware swarm drawers
