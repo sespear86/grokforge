@@ -11,5 +11,5 @@
 - [x] Fix packaging + import issues for installed CLI (src. → top-level, namespace consistency) ← SHIPPED!
 - [x] Global import namespace cleanup across ALL legacy files ← SHIPPED!
 - [x] Build-cache + explicit file rewrite fixes (react/loop.py + stale artifacts) ← SHIPPED!
-- [ ] Add E2E tests + more ReAct tools (unlimited scope)
+- [x] Add E2E tests + more ReAct tools (unlimited scope)
 - [ ] Anything else — no limits on what GrokDream ships next
