@@ -22,3 +22,10 @@ Last updated: 2026-04-02
 - Comprehensive pytest coverage for Tier 4.
 - Rust pyo3 scaffolding in place for high-performance spatial memory (HNSW, etc.).
 - Ready for swarm agent natural-language memory calls.
+
+## Tier 4 Swarm Agent Memory Integration (April 12 2026)
+- `SwarmMemory` class wraps `MemPalaceBridge` (MemoryStack)
+- Shared collective memory + per-agent drawers
+- New tools: `swarm_mine_collective`, `swarm_search`, `swarm_wake_agent`
+- Fully pluggable for Rust hot-paths, multi-modal drawers, distributed backends, natural-language swarm agents
+- Next: Rust memory hot-path + vision-aware swarm drawers
