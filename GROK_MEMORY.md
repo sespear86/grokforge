@@ -37,3 +37,10 @@ Last updated: 2026-04-02
 - Fully pluggable for Rust hot-paths, multi-modal drawers, distributed backends, natural-language swarm agents
 - Import fix added to all tests for zero-friction running
 - Next: Rust memory hot-path + vision-aware swarm drawers
+
+## Tier 4 Rust Hot-Path + Multi-Modal Swarm Integration (April 12 2026)
+- Adaptive bridge with Rust PyO3 hot-path scaffolding (`rust/memory_hotpath/`)
+- Multi-modal drawer hooks (`mine_multi_modal`)
+- Swarm tools: `swarm_rust_search`, `swarm_mine_multi_modal`
+- Fully pluggable for distributed backends, vision models, audio, video drawers
+- Next: Compile Rust extension + integrate Grok-2 vision drawer + Redis sharding
