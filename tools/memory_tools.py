@@ -91,3 +91,20 @@ MEMORY_TOOLS["swarm_mine_collective"] = swarm_mine_collective
 MEMORY_TOOLS["swarm_search"] = swarm_search
 MEMORY_TOOLS["swarm_wake_agent"] = swarm_wake_agent
 print("✅ Swarm memory tools registered – ready for natural-language swarm agents")
+
+# === RUST + MULTI-MODAL SWARM TOOLS (appended – no breaking changes) ===
+def swarm_rust_search(query: str, limit: int = 15) -> list:
+    """Tool: Ultra-fast Rust swarm-wide search."""
+    from memory.swarm_memory import SwarmMemory
+    swarm = SwarmMemory()
+    return swarm.rust_search_swarm(query, limit)
+
+def swarm_mine_multi_modal(content: str, modality: str = "text", metadata: dict = None) -> dict:
+    """Tool: Collective multi-modal mining (image/text/audio ready)."""
+    from memory.swarm_memory import SwarmMemory
+    swarm = SwarmMemory()
+    return swarm.mine_multi_modal_collective(content, modality, metadata)
+
+MEMORY_TOOLS["swarm_rust_search"] = swarm_rust_search
+MEMORY_TOOLS["swarm_mine_multi_modal"] = swarm_mine_multi_modal
+print("✅ Rust + multi-modal swarm tools registered")
