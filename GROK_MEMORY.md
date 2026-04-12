@@ -10,3 +10,10 @@
 - All topic files indexed via simple grep
 
 Last updated: 2026-04-02
+
+### Tier 4 – Spatial Long-Term Memory (MemPalace) – LIVE
+**Status:** Fully integrated via `MemPalaceBackend`.
+- Bridge uses reliable one-line PATH fix to `~/grokforge-palaces/mempalace-venv`.
+- Tools exposed: `mempalace_query`, `mempalace_mine`, `mempalace_wake`, `mempalace_status`, `mempalace_wake_up`.
+- Swarm-ready: `MEMORY_TOOLS` dict available to any ReAct/agent loop.
+- Pluggable for future Rust acceleration, multi-modal drawers, distributed backends.
