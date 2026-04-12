@@ -9,6 +9,7 @@
 - [x] v0.1.2 production release (CLI fully working + token permanent)
 - [x] Improve systemd service + install script for 24/7 persistence ← SHIPPED PRODUCTION-GRADE!
 - [x] Fix packaging + import issues for installed CLI (src. → top-level, namespace consistency) ← SHIPPED!
-- [x] Global import namespace cleanup across ALL legacy files (grok_dream_daemon.py, react_loop.py, main_swarm.py, monitoring, etc.) ← SHIPPED!
-- [x] Add E2E tests + more ReAct tools (unlimited scope)
-- [x] Anything else — no limits on what GrokDream ships next
+- [x] Global import namespace cleanup across ALL legacy files ← SHIPPED!
+- [x] Build-cache + explicit file rewrite fixes (react/loop.py + stale artifacts) ← SHIPPED!
+- [ ] Add E2E tests + more ReAct tools (unlimited scope)
+- [ ] Anything else — no limits on what GrokDream ships next
