@@ -4,10 +4,10 @@ def run_autonomous_react_loop(task: str, dry_run: bool = False):
     """v40 ReAct loop — performs the requested autonomous ship (no scope limits)."""
     print(f"=== GROKDREAM ReAct LOOP v40 ACTIVATED for: {task} ===")
     if dry_run:
-        print("🔍 DRY-RUN ONLY — no changes shipped")
+        print("DRY-RUN ONLY — no changes shipped")
         return
     import os
-    from src.tools.safe_git import safe_git_commit
+    from tools.safe_git import safe_git_commit
     os.makedirs(".github/workflows", exist_ok=True)
     ci_content = """name: GrokForge CI + Release
 on:
@@ -27,7 +27,7 @@ jobs:
       - name: Install
         run: pip install -e .
       - name: Run GrokDream self-test
-        run: grokforge dream --dry-run || echo "✅ GrokDream ready"
+        run: grokforge dream --dry-run || echo "GrokDream ready"
   release:
     needs: test
     if: github.ref == 'refs/heads/main'
@@ -39,7 +39,7 @@ jobs:
 """
     with open(".github/workflows/grokforge-ci.yml", "w") as f:
         f.write(ci_content)
-    print("✅ Created .github/workflows/grokforge-ci.yml (automated testing + release)")
+    print("Created .github/workflows/grokforge-ci.yml (automated testing + release)")
     safe_git_commit(f"feat(ci): autonomous GitHub Actions for testing + release — GrokDream v40 shipped '{task}'")
-    print("✅ GrokDream autonomously shipped the GitHub Actions CI using safe_git_commit!")
+    print("GrokDream autonomously shipped the GitHub Actions CI using safe_git_commit!")
     return {"status": "shipped", "files": [".github/workflows/grokforge-ci.yml"]}
