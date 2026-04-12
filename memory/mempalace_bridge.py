@@ -1,9 +1,11 @@
 import os
 import sys
 from typing import Any, Dict, List, Optional
+import inspect
+
 class MemPalaceBridge:
     """Pristine Tier-4 spatial long-term memory bridge.
-    Now using the actual side palace structure (mempalace.layers.MemoryStack + MempalaceConfig).
+    Now fully adaptive to the real side-palace MemoryStack API.
     Robust lib/lib64 auto-detection + full foresight preserved."""
     def __init__(self):
         # === ROBUST PATH FIX (lib + lib64 auto-detection) ===
@@ -20,16 +22,39 @@ class MemPalaceBridge:
         config = MempalaceConfig() # default config
         self.palace = MemoryStack(config)
         print("✅ MemPalaceBridge initialized (Tier 4 spatial memory online – using MemoryStack)")
+
+    def _call_method(self, method_name: str, *args, **kwargs) -> Any:
+        """Adaptive caller – tries full kwargs, then falls back gracefully."""
+        if not hasattr(self.palace, method_name):
+            return {"status": "method_not_found", "method": method_name}
+        method = getattr(self.palace, method_name)
+        try:
+            # First try with full kwargs
+            return method(*args, **kwargs)
+        except TypeError as e:
+            # If limit or other kwarg is rejected, strip unknown kwargs
+            if "unexpected keyword argument" in str(e):
+                sig = inspect.signature(method)
+                valid_kwargs = {k: v for k, v in kwargs.items() if k in sig.parameters}
+                return method(*args, **valid_kwargs)
+            raise
+
     def status(self) -> Dict:
-        return self.palace.status() if hasattr(self.palace, "status") else {"drawers": "unknown", "status": "healthy"}
+        """Full palace health/status."""
+        return self._call_method("status")
+
     def grokforge_wake_up(self) -> Dict:
-        return self.palace.grokforge_wake_up() if hasattr(self.palace, "grokforge_wake_up") else self.palace.status()
+        """Full GrokForge wake-up sequence."""
+        return self._call_method("grokforge_wake_up")
+
     def search(self, query: str, limit: int = 10) -> List[Dict]:
-        if hasattr(self.palace, "search"):
-            return self.palace.search(query, limit=limit)
-        from mempalace.searcher import search_memories
-        return search_memories(query, limit=limit)
+        """Natural-language spatial memory search – adaptive to real API."""
+        return self._call_method("search", query, limit=limit)
+
     def mine(self, text: str, metadata: Optional[Dict] = None) -> Dict:
-        return self.palace.mine(text, metadata=metadata or {}) if hasattr(self.palace, "mine") else {"status": "mined", "text": text}
+        """Store new knowledge + metadata."""
+        return self._call_method("mine", text, metadata=metadata or {})
+
     def wake(self, drawer_id: str) -> Dict:
-        return self.palace.wake(drawer_id) if hasattr(self.palace, "wake") else {"drawer_id": drawer_id, "status": "woken"}
+        """Retrieve exact drawer by ID."""
+        return self._call_method("wake", drawer_id)
