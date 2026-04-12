@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "grokforge"
-version = "0.1.6"
+version = "0.1.7"
 description = "GrokForge — Autonomous Feature Shipping with ReAct 2.0"
 readme = "README.md"
 requires-python = ">=3.10"
