@@ -135,3 +135,7 @@ if __name__ == "__main__":
     status_parser = subparsers.add_parser("status", help="Show palace status")
     status_parser.set_defaults(func=lambda args: print("Status via bridge"))
 
+
+    # Add status subparser (was missing from previous patch)
+    status_parser = subparsers.add_parser("status", help="Show palace status")
+    status_parser.set_defaults(func=lambda args: print(bridge.status()))
