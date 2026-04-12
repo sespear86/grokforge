@@ -11,4 +11,4 @@
 - [x] Fix packaging + import issues for installed CLI (src. → top-level, namespace consistency) ← SHIPPED!
 - [x] Global import namespace cleanup across ALL legacy files (grok_dream_daemon.py, react_loop.py, main_swarm.py, monitoring, etc.) ← SHIPPED!
 - [x] Add E2E tests + more ReAct tools (unlimited scope)
-- [ ] Anything else — no limits on what GrokDream ships next
+- [x] Anything else — no limits on what GrokDream ships next
