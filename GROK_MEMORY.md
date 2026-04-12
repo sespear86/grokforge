@@ -44,3 +44,10 @@ Last updated: 2026-04-02
 - Swarm tools: `swarm_rust_search`, `swarm_mine_multi_modal`
 - Fully pluggable for distributed backends, vision models, audio, video drawers
 - Next: Compile Rust extension + integrate Grok-2 vision drawer + Redis sharding
+
+## Tier 4 Rust Hot-Path + Multi-Modal Swarm Integration (April 12 2026 – FIXED)
+- Clean bridge rewrite with proper Rust PyO3 + multi-modal hooks
+- Rust scaffolding fully created (`src/lib.rs`)
+- Swarm tools + test now functional
+- Fully pluggable for distributed backends, vision models, audio, video drawers
+- Next: Compile Rust extension + integrate Grok-2 vision drawer + Redis sharding
