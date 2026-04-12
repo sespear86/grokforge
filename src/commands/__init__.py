@@ -23,7 +23,7 @@ def execute_command(name: str, prompt: str):
 
 def build_command_backlog():
     """v43 stub required by src/__init__.py — full foresight for future backlog features"""
-    from src.tools import build_tool_backlog  # safe forward reference
+    from tools import build_tool_backlog  # safe forward reference
     return build_tool_backlog()  # reuses existing tool backlog for commands
 
 __all__ = ["PORTED_COMMANDS", "built_in_command_names", "get_commands", "execute_command", "build_command_backlog"]

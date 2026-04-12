@@ -19,7 +19,7 @@ _healer = None
 def get_healer():
     global _healer
     if _healer is None:
-        from src.monitoring.auto_healing_monitor import AutoHealingMonitor
+        from monitoring.auto_healing_monitor import AutoHealingMonitor
         _healer = AutoHealingMonitor()
     return _healer
 

@@ -1,7 +1,7 @@
 # src/grok_dream_daemon.py — Phase 7.3 GrokDreamV3 Daemon
 import asyncio
 from datetime import datetime
-from src.self_improvement_loop import run_self_improvement_cycle
+from self_improvement_loop import run_self_improvement_cycle
 
 async def main():
     print(f"🌙 [{datetime.now()}] GrokDreamV3 Vision-Aware Daemon started (Phase 7.3)")

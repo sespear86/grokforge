@@ -2,9 +2,9 @@
 # Wires native Grok tool calling + ReAct + self-improvement + keep-alive
 
 import asyncio
-from src.react_loop import execute_react_step_with_grok_tools
-from src.self_improvement_loop import run_self_improvement_cycle
-from src.tool_registry.grok_native_tools import registry
+from react_loop import execute_react_step_with_grok_tools
+from self_improvement_loop import run_self_improvement_cycle
+from tool_registry.grok_native_tools import registry
 
 async def main():
     print("🚀 GrokForge Swarm (Phase 7.3 — Real LLM Tool Calling + Phase 8 Daemon)")
