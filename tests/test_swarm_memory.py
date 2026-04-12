@@ -1,3 +1,8 @@
+import sys
+import os
+# Permanent import fix - works from anywhere
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from memory.swarm_memory import SwarmMemory
 
 def test_swarm():
