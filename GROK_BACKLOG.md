@@ -6,4 +6,4 @@
 - [x] Add Rich streaming UI + live dashboard links to CLI
 - [x] Wire full autonomous ReAct 2.0 loop
 - [x] Create E2E test harness
-- [ ] Prepare pyproject.toml for pip v0.1 release
+- [x] Prepare pyproject.toml for pip v0.1 release
