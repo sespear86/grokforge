@@ -8,5 +8,6 @@
 - [x] Permanent PyPI API token (no more re-entry — ~/.pypirc)
 - [x] v0.1.2 production release (CLI fully working + token permanent)
 - [x] Improve systemd service + install script for 24/7 persistence ← SHIPPED PRODUCTION-GRADE!
+- [x] Fix packaging + import issues for installed CLI (src. → top-level, namespace consistency) ← SHIPPED!
 - [ ] Add E2E tests + more ReAct tools (unlimited scope)
 - [ ] Anything else — no limits on what GrokDream ships next
