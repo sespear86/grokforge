@@ -132,10 +132,5 @@ if __name__ == "__main__":
     else:
         print(bridge.grokforge_wake_up())
 
-    status_parser = subparsers.add_parser("status", help="Show palace status")
-    status_parser.set_defaults(func=lambda args: print("Status via bridge"))
-
 
     # Add status subparser (was missing from previous patch)
-    status_parser = subparsers.add_parser("status", help="Show palace status")
-    status_parser.set_defaults(func=lambda args: print(bridge.status()))
