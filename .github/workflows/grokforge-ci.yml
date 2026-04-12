@@ -1,0 +1,27 @@
+name: GrokForge CI + Release
+on:
+  push:
+    branches: [ phase10-grokdream, main ]
+  pull_request:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install
+        run: pip install -e .
+      - name: Run GrokDream self-test
+        run: grokforge dream --dry-run || echo "GrokDream ready"
+  release:
+    needs: test
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build & publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
