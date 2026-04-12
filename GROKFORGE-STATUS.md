@@ -121,3 +121,9 @@ Local tests passed. Ready for final tool integration.
 - Tool registry (`tools/memory_tools.py`) + swarm integration points added.
 - Full foresight preserved: ready for Rust hot-paths, multi-modal drawers, distributed backends, natural-language swarm agents.
 - Side palace (5427+ drawers) now officially GrokForge’s Tier-4 layer.
+
+### Phase 11 – Test Suite + Rust Hot-Path Scaffolding – COMPLETED Apr 13 2026
+- Full test suite: `tests/test_memory_tier4.py` (pytest-ready, covers bridge/tools/mine-wake cycle).
+- Rust scaffolding: `rust/Cargo.toml` + `src/lib.rs` (pyo3-ready hot-path for future MemPalace acceleration).
+- `verify_tier4.py` added for instant smoke test.
+- All changes pluggable — zero limitations on multi-modal drawers, distributed backends, swarm agents.

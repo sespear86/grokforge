@@ -17,3 +17,8 @@ Last updated: 2026-04-02
 - Tools exposed: `mempalace_query`, `mempalace_mine`, `mempalace_wake`, `mempalace_status`, `mempalace_wake_up`.
 - Swarm-ready: `MEMORY_TOOLS` dict available to any ReAct/agent loop.
 - Pluggable for future Rust acceleration, multi-modal drawers, distributed backends.
+
+### Phase 11 – Test Suite + Rust Hot-Path – LIVE
+- Comprehensive pytest coverage for Tier 4.
+- Rust pyo3 scaffolding in place for high-performance spatial memory (HNSW, etc.).
+- Ready for swarm agent natural-language memory calls.
