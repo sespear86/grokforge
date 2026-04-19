@@ -1,77 +1,26 @@
 import os
 import sys
 import importlib
-import inspect
 from typing import Any, Dict, List, Optional
 
 class MemPalaceBridge:
-    """Pristine Tier-4 spatial long-term memory bridge — FULLY SELF-DIAGNOSING + ADAPTIVE to any mempalace package layout."""
+    """Pristine Tier-4 spatial long-term memory bridge — wired directly to your real mempalace package (functional ChromaDB API)."""
     def __init__(self):
         palace_site = os.path.expanduser("~/grokforge-palaces/mempalace-venv/lib/python3.12/site-packages")
         if palace_site not in sys.path:
             sys.path.insert(0, palace_site)
 
-        self.palace = None
+        self.collection = None
         try:
-            mempalace_mod = importlib.import_module("mempalace")
-            
-            # 1. Try exact common names
-            candidate_names = ["MemPalace", "MemoryStack", "Palace", "MemoryPalace", "CoreMemory", "SpatialMemory", "Memory"]
-            for name in candidate_names:
-                if hasattr(mempalace_mod, name):
-                    self.palace = getattr(mempalace_mod, name)()
-                    print(f"✅ Using exact class '{name}' from mempalace")
-                    break
-            
-            # 2. Try common submodules (many packages hide the main class here)
-            if self.palace is None:
-                for sub in ["core", "memory", "palace", "stack", "base", "models"]:
-                    try:
-                        sub_mod = importlib.import_module(f"mempalace.{sub}")
-                        for name in candidate_names + ["MemoryStack", "Palace"]:
-                            if hasattr(sub_mod, name):
-                                self.palace = getattr(sub_mod, name)()
-                                print(f"✅ Using {name} from mempalace.{sub}")
-                                break
-                        if self.palace:
-                            break
-                    except ImportError:
-                        pass
-            
-            # 3. Ultra-broad auto-discovery (any class with memory-like methods)
-            if self.palace is None:
-                for name, obj in inspect.getmembers(mempalace_mod, inspect.isclass):
-                    methods = [m for m in dir(obj) if not m.startswith("_")]
-                    if any(m in methods for m in ["search", "mine", "status", "wake", "query", "store"]):
-                        self.palace = obj()
-                        print(f"✅ Auto-discovered '{name}' with methods: {methods}")
-                        break
-            
-            if self.palace is None:
-                # 4. FULL DEBUG PRINT — this will show us exactly what is inside your mempalace package
-                print("❌ No suitable class found. FULL MEMPALACE PACKAGE DEBUG:")
-                print("   Top-level names:", [x for x in dir(mempalace_mod) if not x.startswith("_")])
-                print("   All classes and their public methods:")
-                for name, obj in inspect.getmembers(mempalace_mod, inspect.isclass):
-                    methods = [m for m in dir(obj) if not m.startswith("_")]
-                    print(f"     {name}: {methods}")
-                # Also check submodules quickly
-                for sub in ["core", "memory", "palace", "stack"]:
-                    try:
-                        sub_mod = importlib.import_module(f"mempalace.{sub}")
-                        print(f"   Submodule mempalace.{sub} names: {[x for x in dir(sub_mod) if not x.startswith('_')]}")
-                    except:
-                        pass
-                raise ImportError("No suitable memory/palace class found — see debug output above")
-            
-            print(f"MemPalaceBridge initialized using {self.palace.__class__.__name__} (Tier 4 spatial memory online)")
-            
+            from mempalace.palace import get_collection
+            self.collection = get_collection()
+            print("✅ Connected to real mempalace via get_collection() (ChromaDB-backed)")
         except Exception as e:
-            print(f"❌ Failed to initialize mempalace: {e}")
-            print("   → Falling back to mock (tests will still run, but real memory is disabled)")
-            self.palace = None
+            print(f"❌ Could not connect to mempalace collection: {e}")
+            print("   → Falling back to mock (tests will still run)")
+            self.collection = None
 
-        # === RUST HOT-PATH + MULTI-MODAL (unchanged) ===
+        # Rust hot-path (unchanged)
         try:
             sys.path.insert(0, "rust/memory_hotpath/target/release")
             from grokforge_memory_hotpath import RustHotPath
@@ -81,35 +30,63 @@ class MemPalaceBridge:
             self.rust = None
             print("⚠ Rust hot-path not compiled yet – Python fallback active")
 
-    # All the delegation methods stay exactly the same (search, mine, rust_*, mine_multi_modal, etc.)
     def status(self) -> Dict:
-        if self.palace:
-            return self.palace.status()
+        if self.collection:
+            try:
+                count = self.collection.count()
+                return {"status": "live", "backend": "chromadb", "count": count}
+            except:
+                return {"status": "live", "backend": "chromadb"}
         return {"status": "mock", "message": "mempalace not available"}
 
     def grokforge_wake_up(self) -> Dict:
-        if self.palace:
-            return self.palace.grokforge_wake_up()
-        return {"status": "mock"}
+        return self.status()
 
     def search(self, query: str, limit: int = 10) -> List[Dict]:
-        if self.palace:
+        if self.collection:
             try:
-                return self.palace.search(query, limit=limit)
-            except TypeError:
-                return self.palace.search(query)[:limit]
+                res = self.collection.query(query_texts=[query], n_results=limit)
+                # ChromaDB returns {"ids": [...], "documents": [...], "metadatas": [...], "distances": [...]}
+                out = []
+                for i in range(len(res["ids"][0])):
+                    out.append({
+                        "id": res["ids"][0][i],
+                        "text": res["documents"][0][i] if res["documents"] else "",
+                        "metadata": res["metadatas"][0][i] if res["metadatas"] else {},
+                        "score": 1.0 - res["distances"][0][i] if res["distances"] else 1.0
+                    })
+                return out
+            except Exception as e:
+                print(f"⚠ mempalace search error: {e}")
+                return []
         return []
 
     def mine(self, text: str, metadata: Optional[Dict] = None) -> Dict:
-        if self.palace:
-            return self.palace.mine(text, metadata=metadata or {})
+        if self.collection:
+            try:
+                import uuid
+                doc_id = str(uuid.uuid4())
+                self.collection.add(
+                    documents=[text],
+                    metadatas=[metadata or {}],
+                    ids=[doc_id]
+                )
+                return {"status": "stored", "id": doc_id, "backend": "chromadb"}
+            except Exception as e:
+                print(f"⚠ mempalace mine error: {e}")
+                return {"status": "error", "error": str(e)}
         return {"status": "mock", "text": text}
 
     def wake(self, drawer_id: str) -> Dict:
-        if self.palace:
-            return self.palace.wake(drawer_id)
+        if self.collection:
+            try:
+                res = self.collection.get(ids=[drawer_id])
+                return {"id": drawer_id, "content": res.get("documents", [[]])[0]}
+            except:
+                return {"status": "not_found"}
         return {"status": "mock"}
 
+    # Rust + multi-modal (unchanged, still fully forward-compatible)
     def rust_search(self, query: str, limit: int = 10) -> List[Dict]:
         if self.rust:
             results = self.rust.ultra_fast_search(query, limit)
@@ -125,6 +102,6 @@ class MemPalaceBridge:
         meta = metadata or {}
         meta["modality"] = modality
         meta["multi_modal"] = True
-        if self.palace and modality == "image" and hasattr(self.palace, "mine_image"):
-            return self.palace.mine_image(content, meta)
+        if modality == "image":
+            meta["image"] = True  # placeholder for future vision drawer
         return self.mine(str(content), meta)
