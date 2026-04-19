@@ -1,10 +1,9 @@
 import os
 import sys
-import importlib
 from typing import Any, Dict, List, Optional
 
 class MemPalaceBridge:
-    """Pristine Tier-4 spatial long-term memory bridge — wired directly to your real mempalace package (functional ChromaDB API)."""
+    """Pristine Tier-4 spatial long-term memory bridge — fully wired to your real mempalace package (get_collection(palace_path) + ChromaDB)."""
     def __init__(self):
         palace_site = os.path.expanduser("~/grokforge-palaces/mempalace-venv/lib/python3.12/site-packages")
         if palace_site not in sys.path:
@@ -13,10 +12,36 @@ class MemPalaceBridge:
         self.collection = None
         try:
             from mempalace.palace import get_collection
-            self.collection = get_collection()
-            print("✅ Connected to real mempalace via get_collection() (ChromaDB-backed)")
+            
+            # Try sensible palace paths (your package requires palace_path)
+            candidate_paths = [
+                os.path.expanduser("~/grokforge-palaces/default_palace"),
+                os.path.expanduser("~/grokforge-palaces/memory_palace"),
+                os.path.expanduser("~/grokforge-palaces/palace"),
+                os.path.expanduser("~/.grokforge/palace"),
+                "/tmp/grokforge_palace",
+                "."
+            ]
+            
+            for path in candidate_paths:
+                try:
+                    os.makedirs(path, exist_ok=True)
+                    self.collection = get_collection(path)
+                    print(f"✅ Connected to real mempalace at: {path}")
+                    break
+                except Exception as e:
+                    print(f"   Tried {path} → {e}")
+                    continue
+            
+            if self.collection is None:
+                # Last resort — create a fresh one
+                default_path = os.path.expanduser("~/grokforge-palaces/default_palace")
+                os.makedirs(default_path, exist_ok=True)
+                self.collection = get_collection(default_path)
+                print(f"✅ Connected to real mempalace at default path: {default_path}")
+                
         except Exception as e:
-            print(f"❌ Could not connect to mempalace collection: {e}")
+            print(f"❌ Could not connect to mempalace: {e}")
             print("   → Falling back to mock (tests will still run)")
             self.collection = None
 
@@ -34,7 +59,7 @@ class MemPalaceBridge:
         if self.collection:
             try:
                 count = self.collection.count()
-                return {"status": "live", "backend": "chromadb", "count": count}
+                return {"status": "live", "backend": "chromadb", "count": count, "path": getattr(self.collection, '_collection_name', 'unknown')}
             except:
                 return {"status": "live", "backend": "chromadb"}
         return {"status": "mock", "message": "mempalace not available"}
@@ -46,14 +71,13 @@ class MemPalaceBridge:
         if self.collection:
             try:
                 res = self.collection.query(query_texts=[query], n_results=limit)
-                # ChromaDB returns {"ids": [...], "documents": [...], "metadatas": [...], "distances": [...]}
                 out = []
                 for i in range(len(res["ids"][0])):
                     out.append({
                         "id": res["ids"][0][i],
-                        "text": res["documents"][0][i] if res["documents"] else "",
-                        "metadata": res["metadatas"][0][i] if res["metadatas"] else {},
-                        "score": 1.0 - res["distances"][0][i] if res["distances"] else 1.0
+                        "text": res["documents"][0][i] if res.get("documents") else "",
+                        "metadata": res["metadatas"][0][i] if res.get("metadatas") else {},
+                        "score": 1.0 - res["distances"][0][i] if res.get("distances") else 1.0
                     })
                 return out
             except Exception as e:
@@ -81,12 +105,12 @@ class MemPalaceBridge:
         if self.collection:
             try:
                 res = self.collection.get(ids=[drawer_id])
-                return {"id": drawer_id, "content": res.get("documents", [[]])[0]}
+                return {"id": drawer_id, "content": res.get("documents", [[]])[0] if res.get("documents") else ""}
             except:
                 return {"status": "not_found"}
         return {"status": "mock"}
 
-    # Rust + multi-modal (unchanged, still fully forward-compatible)
+    # Rust + multi-modal (unchanged)
     def rust_search(self, query: str, limit: int = 10) -> List[Dict]:
         if self.rust:
             results = self.rust.ultra_fast_search(query, limit)
@@ -103,5 +127,5 @@ class MemPalaceBridge:
         meta["modality"] = modality
         meta["multi_modal"] = True
         if modality == "image":
-            meta["image"] = True  # placeholder for future vision drawer
+            meta["image"] = True
         return self.mine(str(content), meta)
