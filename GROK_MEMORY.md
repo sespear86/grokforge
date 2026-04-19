@@ -58,3 +58,9 @@ Last updated: 2026-04-02
 - Redis sharding scaffolding (`enable_redis_sharding`, `redis_search`)
 - Swarm tools: `swarm_mine_image`, `swarm_search_by_image`
 - Fully ready for distributed backends, vision models, multi-node memory
+## Tier 5 – Rust Hot-Path Compiled + Grok-2 Vision + Redis Sharding (April 19 2026 – FIXED)
+- ✅ Rust extension compiled cleanly (`maturin develop --release`)
+- ✅ PyO3 0.22 signature fixed (`Py<PyDict>` pattern)
+- Grok-2 vision drawer hooks live
+- Redis sharding scaffolding live
+- All tests passing with real ChromaDB + native Rust hot-path
