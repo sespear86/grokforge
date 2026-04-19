@@ -183,3 +183,16 @@ class SwarmMemory:
         meta["agent_id"] = agent_id
         meta["drawer"] = drawer
         return self.bridge.mine_multi_modal(content, modality, meta)
+
+    # === VISION + REDIS EXTENSIONS (added) ===
+    def mine_image_collective(self, image_path: str, metadata: Optional[Dict] = None) -> Dict:
+        meta = metadata or {}
+        meta["swarm_id"] = self.swarm_id
+        meta["source"] = "collective"
+        return self.bridge.mine_image(image_path, meta)
+
+    def search_by_image_swarm(self, image_path: str, limit: int = 5) -> List[Dict]:
+        return self.bridge.search_by_image(image_path, limit)
+
+    def enable_redis(self, redis_url: str = "redis://localhost:6379/0"):
+        return self.bridge.enable_redis_sharding(redis_url)
