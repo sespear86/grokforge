@@ -6,10 +6,15 @@ pub struct RustHotPath {}
 
 #[pymethods]
 impl RustHotPath {
+    #[new]
+    fn new() -> Self {
+        RustHotPath {}
+    }
+
     #[pyo3(signature = (text, metadata=None))]
     fn ultra_fast_mine(&self, text: &str, metadata: Option<Py<PyDict>>) -> PyResult<String> {
         if let Some(_m) = metadata {
-            // Future: process metadata dict here if needed
+            // Future: process metadata if needed
         }
         Ok(format!("ultra_mined:{}", text))
     }
