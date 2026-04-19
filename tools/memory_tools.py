@@ -125,3 +125,18 @@ def swarm_mine_multi_modal(content: str, modality: str = "text", metadata: dict 
 MEMORY_TOOLS["swarm_rust_search"] = swarm_rust_search
 MEMORY_TOOLS["swarm_mine_multi_modal"] = swarm_mine_multi_modal
 print("✅ Rust + multi-modal swarm tools registered")
+
+# === VISION + REDIS SWARM TOOLS (added) ===
+def swarm_mine_image(image_path: str, metadata: dict = None) -> dict:
+    from memory.swarm_memory import SwarmMemory
+    swarm = SwarmMemory()
+    return swarm.mine_image_collective(image_path, metadata)
+
+def swarm_search_by_image(image_path: str, limit: int = 5) -> list:
+    from memory.swarm_memory import SwarmMemory
+    swarm = SwarmMemory()
+    return swarm.search_by_image_swarm(image_path, limit)
+
+MEMORY_TOOLS["swarm_mine_image"] = swarm_mine_image
+MEMORY_TOOLS["swarm_search_by_image"] = swarm_search_by_image
+print("✅ Vision + Redis swarm tools registered")
