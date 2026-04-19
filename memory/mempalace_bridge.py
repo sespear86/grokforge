@@ -118,3 +118,16 @@ class MemPalaceBridge:
         if modality == "image":
             return self.search_by_image(query, limit)
         return self.search(query, limit)
+
+    # === RUST HOT-PATH WRAPPERS (added for full Swarm + test compatibility) ===
+    def rust_mine(self, text: str, metadata: Optional[Dict] = None) -> Dict:
+        if self.rust:
+            result = self.rust.ultra_fast_mine(text, metadata)
+            return {"status": "rust_mined", "result": result}
+        return self.mine(text, metadata)
+
+    def rust_search(self, query: str, limit: int = 5) -> List[Dict]:
+        if self.rust:
+            results = self.rust.ultra_fast_search(query, limit)
+            return [{"text": r, "metadata": {}, "distance": 0.0} for r in results]
+        return self.search(query, limit)
