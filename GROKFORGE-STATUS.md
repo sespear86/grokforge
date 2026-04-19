@@ -127,3 +127,10 @@ Local tests passed. Ready for final tool integration.
 - Rust scaffolding: `rust/Cargo.toml` + `src/lib.rs` (pyo3-ready hot-path for future MemPalace acceleration).
 - `verify_tier4.py` added for instant smoke test.
 - All changes pluggable — zero limitations on multi-modal drawers, distributed backends, swarm agents.
+
+**Tier 5 – Native Rust Hot-Path + Full Memory Bridge – COMPLETED April 19 2026**  
+- `rust_mine` + `rust_search` wrappers added to mempalace_bridge.py  
+- All tests green, palace count growing, native speed active  
+- Redis production layer now activated (next step for persistent multi-agent swarms)  
+
+**Tier 6 – Production Redis Persistence + Swarm ReAct 2.0 Wiring – IN PROGRESS**  
