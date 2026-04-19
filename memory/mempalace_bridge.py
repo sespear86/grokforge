@@ -3,17 +3,21 @@ import sys
 from typing import Any, Dict, List, Optional
 
 class MemPalaceBridge:
-    """Pristine Tier-4 spatial long-term memory bridge with Rust hot-path + multi-modal drawers."""
+    """Pristine Tier-4 spatial long-term memory bridge with Rust hot-path + multi-modal drawers.
+    Uses one-line PATH fix to the side palace venv – no subprocess fragility."""
+
     def __init__(self):
         # === ONE-LINE PATH FIX (reliable, as verified in your terminal) ===
         palace_site = os.path.expanduser("~/grokforge-palaces/mempalace-venv/lib/python3.12/site-packages")
         if palace_site not in sys.path:
             sys.path.insert(0, palace_site)
+        
+        # Import from the side palace (package must exist in venv – it does)
         from mempalace import MemPalace
         self.palace = MemPalace()
+        
         # === RUST HOT-PATH + MULTI-MODAL EXTENSIONS (added – full foresight) ===
         try:
-            import sys
             sys.path.insert(0, "rust/memory_hotpath/target/release")
             from grokforge_memory_hotpath import RustHotPath
             self.rust = RustHotPath()
@@ -21,6 +25,7 @@ class MemPalaceBridge:
         except Exception:
             self.rust = None
             print("⚠ Rust hot-path not compiled yet – Python fallback active")
+        
         print("MemPalaceBridge initialized (Tier 4 spatial memory + Rust + multi-modal online)")
 
     def status(self) -> Dict:
@@ -38,7 +43,7 @@ class MemPalaceBridge:
     def wake(self, drawer_id: str) -> Dict:
         return self.palace.wake(drawer_id)
 
-    # === NEW: RUST HOT-PATH METHODS ===
+    # === RUST HOT-PATH METHODS ===
     def rust_search(self, query: str, limit: int = 10) -> List[Dict]:
         """Ultra-fast Rust spatial search (hot-path)."""
         if self.rust:
@@ -52,7 +57,7 @@ class MemPalaceBridge:
             self.rust.ultra_fast_mine(text, None)
         return self.mine(text, metadata)
 
-    # === NEW: MULTI-MODAL DRAWER HOOKS (placeholders – ready for Grok-2 vision, audio, video) ===
+    # === MULTI-MODAL DRAWER HOOKS (placeholders – ready for Grok-2 vision, audio, video) ===
     def mine_multi_modal(self, content: Any, modality: str = "text", metadata: Optional[Dict] = None) -> Dict:
         """Mine image/text/audio/video into spatial drawers."""
         meta = metadata or {}
