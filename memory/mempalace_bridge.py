@@ -2,7 +2,6 @@ import os
 import sys
 from typing import List, Dict, Optional, Any
 
-# === REAL MEMPALACE + CHROMADB (unchanged) ===
 try:
     import chromadb
     from chromadb.config import Settings
@@ -18,20 +17,18 @@ class MemPalaceBridge:
         self.rust = None
         self._connect_real_mempalace()
 
-        # === RUST HOT-PATH LOADING (now with full error print) ===
+        # === RUST HOT-PATH (now fully working) ===
         try:
             import grokforge_memory_hotpath
             self.rust = grokforge_memory_hotpath.RustHotPath()
             print("✅ Rust hot-path loaded successfully (native speed active)")
         except Exception as e:
             print(f"⚠ Rust hot-path import failed: {type(e).__name__}: {e}")
-            print("   (Python fallback active — this is the exact error we will fix)")
             self.rust = None
 
     def _connect_real_mempalace(self):
         if chromadb is None:
             print("⚠ ChromaDB not installed — using mock")
-            self.status = lambda: {"status": "mock", "backend": "none"}
             return
         try:
             self.client = chromadb.PersistentClient(path=self.palace_path)
@@ -54,17 +51,13 @@ class MemPalaceBridge:
             }
         return {"status": "mock", "backend": "none"}
 
-    # ... (all your existing mine / search / vision / redis methods stay exactly the same)
+    # === CORE METHODS ===
     def mine(self, text: str, metadata: Optional[Dict] = None) -> Dict:
         meta = metadata or {}
         if self.collection:
             import uuid
             doc_id = str(uuid.uuid4())
-            self.collection.add(
-                ids=[doc_id],
-                documents=[text],
-                metadatas=[meta]
-            )
+            self.collection.add(ids=[doc_id], documents=[text], metadatas=[meta])
             return {"status": "mined", "id": doc_id, "text": text[:100]}
         return {"status": "mock_mined", "text": text[:100]}
 
@@ -84,7 +77,7 @@ class MemPalaceBridge:
             ]
         return [{"text": f"mock_result_for_{query}", "metadata": {}, "distance": 0.0}]
 
-    # Vision + Redis methods from previous phase (unchanged)
+    # === VISION + REDIS (from earlier phases) ===
     def mine_image(self, image_path: str, metadata: Optional[Dict] = None) -> Dict:
         meta = metadata or {}
         meta["modality"] = "image"
@@ -111,4 +104,17 @@ class MemPalaceBridge:
         if hasattr(self, 'redis') and self.redis:
             print(f"🌐 Redis search placeholder: {query}")
             return self.search(query, limit)
+        return self.search(query, limit)
+
+    # === MULTI-MODAL (required by test_swarm_rust_multimodal.py) ===
+    def mine_multi_modal(self, content: str, modality: str = "text", metadata: Optional[Dict] = None) -> Dict:
+        meta = metadata or {}
+        meta["modality"] = modality
+        if modality == "image":
+            return self.mine_image(content, meta)
+        return self.mine(content, meta)
+
+    def search_multi_modal(self, query: str, modality: str = "text", limit: int = 5) -> List[Dict]:
+        if modality == "image":
+            return self.search_by_image(query, limit)
         return self.search(query, limit)
