@@ -90,3 +90,24 @@ class SwarmMemory:
         meta["agent_id"] = agent_id
         meta["drawer"] = drawer
         return self.bridge.mine_multi_modal(content, modality, meta)
+
+# === RUST + MULTI-MODAL EXTENSIONS (re-confirmed clean) ===
+    def rust_search_swarm(self, query: str, limit: int = 20) -> List[Dict]:
+        """Swarm-wide ultra-fast Rust search."""
+        return self.bridge.rust_search(query, limit)
+
+    def mine_multi_modal_collective(self, content: Any, modality: str = "text", metadata: Optional[Dict] = None) -> Dict:
+        """Collective multi-modal mining."""
+        meta = metadata or {}
+        meta["swarm_id"] = self.swarm_id
+        meta["source"] = "collective"
+        return self.bridge.mine_multi_modal(content, modality, meta)
+
+    def mine_multi_modal_agent(self, agent_id: str, content: Any, modality: str = "text", metadata: Optional[Dict] = None) -> Dict:
+        """Agent-specific multi-modal mining."""
+        drawer = self.agent_drawers.get(agent_id) or self.register_agent(agent_id)
+        meta = metadata or {}
+        meta["swarm_id"] = self.swarm_id
+        meta["agent_id"] = agent_id
+        meta["drawer"] = drawer
+        return self.bridge.mine_multi_modal(content, modality, meta)
