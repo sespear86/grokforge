@@ -129,3 +129,19 @@ class MemPalaceBridge:
         if modality == "image":
             meta["image"] = True
         return self.mine(str(content), meta)
+
+    # === GROK-2 VISION DRAWER HOOK (added – ready for Grok-2 vision / CLIP / LLaVA) ===
+    def mine_image(self, image_path: str, metadata: Optional[Dict] = None) -> Dict:
+        """Mine an image into the palace using vision embeddings (Grok-2 ready)."""
+        meta = metadata or {}
+        meta["modality"] = "image"
+        meta["vision_model"] = "grok-2"  # or "clip", "llava", etc.
+        # Placeholder — replace with real embedding call when Grok-2 vision is available
+        print(f"🖼️  Vision mining placeholder for {image_path} (Grok-2 hook ready)")
+        return self.mine(f"[IMAGE:{image_path}]", meta)
+
+    def search_by_image(self, image_path: str, limit: int = 5) -> List[Dict]:
+        """Search the palace using an image query (future Grok-2 vision embedding)."""
+        # Placeholder — will use vision embedding of image_path
+        print(f"🔍 Vision search placeholder for {image_path}")
+        return self.search(f"[IMAGE_QUERY:{image_path}]", limit)
