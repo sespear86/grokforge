@@ -51,3 +51,10 @@ Last updated: 2026-04-02
 - Swarm tools + test now functional
 - Fully pluggable for distributed backends, vision models, audio, video drawers
 - Next: Compile Rust extension + integrate Grok-2 vision drawer + Redis sharding
+
+## Tier 5 – Rust Hot-Path Compiled + Grok-2 Vision + Redis Sharding (April 19 2026)
+- Rust extension compiled (`maturin develop --release`)
+- Grok-2 vision drawer hooks (`mine_image`, `search_by_image`)
+- Redis sharding scaffolding (`enable_redis_sharding`, `redis_search`)
+- Swarm tools: `swarm_mine_image`, `swarm_search_by_image`
+- Fully ready for distributed backends, vision models, multi-node memory
