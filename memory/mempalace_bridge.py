@@ -145,3 +145,24 @@ class MemPalaceBridge:
         # Placeholder — will use vision embedding of image_path
         print(f"🔍 Vision search placeholder for {image_path}")
         return self.search(f"[IMAGE_QUERY:{image_path}]", limit)
+
+    # === REDIS SHARDING HOOKS (added – ready for distributed / multi-node memory) ===
+    def enable_redis_sharding(self, redis_url: str = "redis://localhost:6379/0"):
+        """Enable Redis-backed sharding for distributed memory (future)."""
+        try:
+            import redis
+            self.redis = redis.from_url(redis_url)
+            print(f"✅ Redis sharding enabled at {redis_url}")
+            return True
+        except Exception as e:
+            print(f"⚠ Redis not available: {e}")
+            self.redis = None
+            return False
+
+    def redis_search(self, query: str, limit: int = 10) -> List[Dict]:
+        """Distributed search via Redis (placeholder for real sharded index)."""
+        if hasattr(self, 'redis') and self.redis:
+            # Placeholder — real implementation would query Redis vector index
+            print(f"🌐 Redis search placeholder: {query}")
+            return self.search(query, limit)
+        return self.search(query, limit)
