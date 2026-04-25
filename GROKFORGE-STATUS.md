@@ -199,3 +199,12 @@ Local tests passed. Ready for final tool integration.
 
 **Tier 9 – External Task Ingestion + Grok-2 Vision Integration + Self-Healing Swarms – STARTING NEXT**
 
+
+**Tier 8 – Persistent Daemon + Redis Task Queue + Self-Improving GrokDream v5 – COMPLETE April 25 2026**
+- Verified with full 2-cycle run, Rust hot-path, palace @ 30+, self-improvement active
+
+**Tier 9 – External Task Ingestion + Grok-2 Vision Integration + Self-Healing Swarms – STARTING NOW**
+- External task ingestion via Redis queue (CLI + future webhook/API ready)
+- Grok-2 Vision hook expanded for image-aware tasks
+- Self-healing daemon (auto-recover on errors)
+- Palace now ready for continuous 24/7 operation
