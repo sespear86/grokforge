@@ -208,3 +208,11 @@ Local tests passed. Ready for final tool integration.
 - Grok-2 Vision hook expanded for image-aware tasks
 - Self-healing daemon (auto-recover on errors)
 - Palace now ready for continuous 24/7 operation
+
+**Tier 9 – External Task Ingestion + Grok-2 Vision Integration + Self-Healing Swarms – COMPLETE April 25 2026**
+- Redis bootstrap helper + auto-start resilience added
+- external_task_ingestor now works reliably even after reboots
+- Daemon v5.1 fully tested with vision flag (palace @33 and climbing)
+- Self-healing + Redis queue production-ready
+
+**Tier 10 – Webhook/API Task Ingestion + Grok-2 Vision Image Upload + Distributed Scaling – UNLOCKED NEXT**
