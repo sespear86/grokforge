@@ -299,3 +299,8 @@ Local tests passed. Ready for final tool integration.
 - Redis (valkey) fully managed
 
 **Tier 11 – Real Grok-2 Vision Image Download + Processing + Self-Healing Swarm Recovery + Multi-Machine Scaling – STARTING NOW**
+
+**Tier 11 – Real Grok-2 Vision Image Download + Processing + Self-Healing Swarm Recovery + Multi-Machine Scaling – IN PROGRESS April 25 2026**
+- Real image_url processing + vision-enhanced city block creation (this block)
+- Palace will grow past 39 on next vision task
+- Forward-compatible with real uploaded images and Grok-2 API
