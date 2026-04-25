@@ -329,3 +329,11 @@ Local tests passed. Ready for final tool integration.
 - Full daemon v5.6 integration complete and running
 - Real vision processing confirmed on next Redis task
 - Palace @41 and ready to grow with live images
+**Tier 11 LOCKED April 25 2026 — Live Grok-2 Vision + Daemon v5.6 SUCCESS**
+- Vision task processed end-to-end: Grok-2 integration triggered, https://picsum.photos/1024/768 analyzed, first vision-enhanced city block added
+- Palace @43 and growing autonomously with Rust hot-path
+- Redis + webhook fully operational
+
+**Tier 12 – Self-Healing Swarm Recovery + Multi-Machine Redis + Shared Palace Scaling – STARTING NOW April 25 2026**
+- Systemd auto-restart on crash/reboot/signal
+- Multi-machine zero-code-change scaling via env vars + network mount
