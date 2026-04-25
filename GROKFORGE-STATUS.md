@@ -216,3 +216,12 @@ Local tests passed. Ready for final tool integration.
 - Self-healing + Redis queue production-ready
 
 **Tier 10 – Webhook/API Task Ingestion + Grok-2 Vision Image Upload + Distributed Scaling – UNLOCKED NEXT**
+
+**Tier 9 – External Task Ingestion + Grok-2 Vision Integration + Self-Healing Swarms – COMPLETE April 25 2026**
+- One-time Redis server install added (auto-handled by bootstrap)
+- start_redis.sh now installs if missing
+- external ingestion + daemon fully resilient
+- Palace @33+ and climbing
+- Self-healing + Redis queue production-ready
+
+**Tier 10 – Webhook/API Task Ingestion + Grok-2 Vision Image Upload + Distributed Scaling – UNLOCKED NEXT**
