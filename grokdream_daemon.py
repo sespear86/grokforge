@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Tier 10 — GrokDream Daemon v5.4 (Webhook + Image Vision Prep)
+Tier 11 prep — GrokDream Daemon v5.5 (24/7 ready + image vision demo)
 """
 import argparse
 import os
@@ -14,7 +14,7 @@ from memory.swarm_react_engine import SwarmReActEngine
 
 class GrokDreamDaemon:
     def __init__(self):
-        self.engine = SwarmReActEngine(swarm_id="grokdream-daemon-v5.4")
+        self.engine = SwarmReActEngine(swarm_id="grokdream-daemon-v5.5")
         self.redis = redis.Redis(host='localhost', port=6379, db=1, decode_responses=True, socket_connect_timeout=3)
         self.running = True
         signal.signal(signal.SIGINT, self.shutdown)
@@ -22,7 +22,7 @@ class GrokDreamDaemon:
         
         try:
             self.redis.ping()
-            print("✅ GrokDream Daemon v5.4 initialized — Redis LIVE + Webhook + Vision Image Ready")
+            print("✅ GrokDream Daemon v5.5 initialized — 24/7 + Webhook + Vision Image READY")
         except:
             print("⚠️  Redis not connected yet (daemon still runs via --task mode)")
 
@@ -46,12 +46,12 @@ class GrokDreamDaemon:
     def run_self_improvement(self):
         improvement = self.engine.bridge.rust_mine(
             "SELF-IMPROVEMENT: Review last GrokDream cycle and propose one refined task for next run",
-            {"agent": "critic", "type": "self_improve", "swarm": "grokdream-daemon-v5.4"}
+            {"agent": "critic", "type": "self_improve", "swarm": "grokdream-daemon-v5.5"}
         )
         print(f"✅ Self-improvement mined: {improvement['status']}")
 
     def run(self, task: str = None, cycles: int = 2, continuous: bool = False, sleep: int = 30):
-        print("🚀 GrokDream Daemon v5.4 starting (self-healing + webhook ready)...")
+        print("🚀 GrokDream Daemon v5.5 starting 24/7 self-improving mode...")
         run_count = 0
         while self.running:
             run_count += 1
@@ -62,7 +62,7 @@ class GrokDreamDaemon:
                 if current_task.get("requires_vision"):
                     print("🖼️  Grok-2 Vision integration triggered — image upload ready")
                     if current_task.get("image_url"):
-                        print(f"   📸 Image URL: {current_task['image_url']}")
+                        print(f"   📸 Processing image: {current_task['image_url']}")
                 
                 self.engine.run_multi_agent_cycle(current_task["task"], max_cycles=cycles)
                 self.run_self_improvement()
@@ -78,7 +78,7 @@ class GrokDreamDaemon:
             time.sleep(sleep)
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="🚀 GrokDream Daemon v5.4")
+    parser = argparse.ArgumentParser(description="🚀 GrokDream Daemon v5.5")
     parser.add_argument("--task", type=str, default=None, help="Task for single-run mode")
     parser.add_argument("--cycles", type=int, default=2, help="Cycles per run")
     parser.add_argument("--continuous", action="store_true", help="Run forever with Redis queue")
