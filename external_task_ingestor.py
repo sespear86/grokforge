@@ -1,20 +1,42 @@
 #!/usr/bin/env python3
 """
-Tier 9 — External Task Ingestor
-Simple, fast way to feed tasks into the GrokDream daemon from anywhere (CLI, scripts, future webhooks).
+Tier 9 — External Task Ingestor (RESILIENT)
+Now with Redis retry + friendly messages. Zero extra effort.
 """
 import argparse
 import json
 import time
 import redis
 import sys
+import subprocess
+
+def ensure_redis_running():
+    """Quick check + auto-start attempt."""
+    try:
+        r = redis.Redis(host='localhost', port=6379, db=1, socket_connect_timeout=1)
+        r.ping()
+        return True
+    except:
+        print("⚡ Redis not responding — attempting auto-start...")
+        try:
+            subprocess.run(["./start_redis.sh"], check=True, capture_output=True)
+            time.sleep(2)
+            return True
+        except:
+            print("❌ Could not auto-start Redis. Please run: ./start_redis.sh")
+            return False
 
 def main():
     parser = argparse.ArgumentParser(description="🚀 External Task Ingestor for GrokDream Daemon")
     parser.add_argument("--task", type=str, required=True, help="Task description to inject")
-    parser.add_argument("--source", type=str, default="external-cli", help="Source label (for tracking)")
-    parser.add_argument("--vision", action="store_true", help="Flag if this task needs Grok-2 Vision processing")
+    parser.add_argument("--source", type=str, default="external-cli", help="Source label")
+    parser.add_argument("--vision", action="store_true", help="Flag for Grok-2 Vision")
     args = parser.parse_args()
+
+    if not ensure_redis_running():
+        print("⚠️  Falling back to console-only (daemon can still use --task)")
+        print(f"   Task was: {args.task}")
+        return
 
     r = redis.Redis(host='localhost', port=6379, db=1, decode_responses=True)
     
