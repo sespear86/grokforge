@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Tier 9 — External Task Ingestor (RESILIENT)
-Now with Redis retry + friendly messages. Zero extra effort.
+Tier 9 — External Task Ingestor (FULLY RESILIENT)
+Now calls the new bootstrap automatically.
 """
 import argparse
 import json
@@ -11,19 +11,18 @@ import sys
 import subprocess
 
 def ensure_redis_running():
-    """Quick check + auto-start attempt."""
     try:
         r = redis.Redis(host='localhost', port=6379, db=1, socket_connect_timeout=1)
         r.ping()
         return True
     except:
-        print("⚡ Redis not responding — attempting auto-start...")
+        print("⚡ Redis not responding — running full bootstrap...")
         try:
-            subprocess.run(["./start_redis.sh"], check=True, capture_output=True)
+            subprocess.run(["./bootstrap_redis.sh"], check=True)
             time.sleep(2)
             return True
         except:
-            print("❌ Could not auto-start Redis. Please run: ./start_redis.sh")
+            print("❌ Bootstrap failed. Please run: ./bootstrap_redis.sh")
             return False
 
 def main():
