@@ -234,3 +234,14 @@ Local tests passed. Ready for final tool integration.
 - Self-healing + Redis queue production-ready on any Linux
 
 **Tier 10 – Webhook/API Task Ingestion + Grok-2 Vision Image Upload + Distributed Scaling – UNLOCKED NEXT**
+
+**Tier 9 – External Task Ingestion + Grok-2 Vision Integration + Self-Healing Swarms – COMPLETE April 25 2026**
+- Universal Redis bootstrap (Fedora 43 dnf + Ubuntu apt)
+- External ingestion + daemon v5.3 fully tested (palace @38)
+- Redis (valkey) installed and running perfectly on Fedora 43 KDE Plasma
+
+**Tier 10 – Webhook/API Task Ingestion + Grok-2 Vision Image Upload + Distributed Scaling – STARTING NOW**
+- Simple Flask webhook endpoint (/ingest) for instant task submission from anywhere
+- Continuous 24/7 launcher script
+- Grok-2 Vision image upload prep (ready for real images)
+- Self-healing + Redis queue now production-grade
