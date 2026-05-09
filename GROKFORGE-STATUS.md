@@ -344,3 +344,14 @@ Local tests passed. Ready for final tool integration.
 - Palace @43 with Rust hot-path
 
 **Tier 13 – FULL SWARM ACTIVATION + LIVE VISION SWARM TEST #2 + REAL-TIME MONITORING + MULTI-MACHINE LOCK – STARTING NOW April 25 2026**
+**Tier 13 PARTIAL April 25 2026 — Full Swarm Base + Multi-Machine Prep SUCCESS**
+- grokforge-swarm.service active running (Phase 7)
+- grokdream.service / grok-dream.service / dashboard in auto-restart loop (venv mismatch)
+- Multi-machine instructions ready
+- Ingest endpoint not listening (fix in Tier 14)
+
+**Tier 14 – STABILIZE SWARM + FIX INGEST + LIVE VISION TEST #3 + PALACE GROWTH + MULTI-MACHINE LOCK – STARTING NOW May 09 2026**
+- All services forced to use mempalace-venv
+- external_task_ingestor.py started and bound to :5000
+- Vision task processed successfully
+- Palace grows to 44+
